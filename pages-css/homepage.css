@@ -1,0 +1,48 @@
+/* Center and style the page */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+}
+
+/* Style the heading */
+h1 {
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: tomato;
+}
+
+/* Style the buttons */
+a {
+    text-decoration: none;
+    width: 25%;
+}
+
+button {
+    width: 100%;
+    padding: 20px;
+    margin: 10px 0;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+/* Hover and active effects for buttons */
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+button:active {
+    background-color: #003d82;
+}
