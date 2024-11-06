@@ -7,6 +7,10 @@ body {
     justify-content: center;
     min-height: 100vh;
     margin: 0;
+    background-image: url("../images/background3.jpeg");
+    background-size: cover; /* other options: contain, auto, or specify dimensions */
+    background-position: center; /* centers the image */
+    background-repeat: no-repeat; /* prevents the image from repeating */
 }
 
 /* Form container styling */
