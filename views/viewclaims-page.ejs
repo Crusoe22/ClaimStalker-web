@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Claim</title>
+    <link rel="stylesheet" href="/viewclaims-page.css">
+</head>
+
+<body>
+    <h1>View Claim</h1>
+    <form action="/view-claim" method="GET">
+        <label for="policyNumber">Policy Number:</label>
+        <input type="text" id="policyNumber" name="policyNumber" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <% if (claim) { %>
+        <!-- Claim Details Box -->
+        <div class="claim-details">
+            <h2>Claim Details</h2>
+            <p><strong>Email:</strong> <%= claim.email %></p>
+            <p><strong>Name:</strong> <%= claim.name %></p>
+            <p><strong>Phone:</strong> <%= claim.phone %></p>
+            <p><strong>Policy Number:</strong> <%= claim.policyNumber %></p>
+            <p><strong>Insurance Company:</strong> <%= claim.insuranceCompany %></p>
+            <p><strong>Date of Loss:</strong> <%= claim.claimDate.toDateString() %></p>
+            <p><strong>Auto Loss:</strong> <%= claim.autoLoss %></p>
+            <p><strong>Property Loss:</strong> <%= claim.propertyLoss %></p>
+            <p><strong>Location:</strong> <%= claim.location %></p>
+            <p><strong>Description:</strong> <%= claim.description %></p>
+        </div>
+    <% } else if (typeof claim !== 'undefined') { %>
+        <p>No claim found for the provided policy number.</p>
+    <% } %>
+</body>
+</html>

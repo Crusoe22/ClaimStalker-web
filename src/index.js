@@ -114,6 +114,36 @@ app.post("/submit-claim", async (req, res) => {
     }
 });
 
+
+
+// Create claim viewer
+//const { ClaimCollection } = require("./config");
+
+// Render the viewclaims-page form
+app.get("/viewclaims-page", (req, res) => {
+    res.render("viewclaims-page", { claim: null });
+});
+
+// Search for a claim by policy number
+app.get("/view-claim", async (req, res) => {
+    const policyNumber = req.query.policyNumber;
+
+    try {
+        // Find the claim in the database
+        const claim = await ClaimCollection.findOne({ policyNumber: policyNumber });
+
+        // Render the page with claim data if found, or display a message if not found
+        res.render("viewclaims-page", { claim });
+    } catch (error) {
+        console.error("Error retrieving claim:", error);
+        res.status(500).send("An error occurred while retrieving the claim.");
+    }
+});
+
+
+
+
+
 // Define port for the application
 const port = 5500;
 app.listen(port, () => {
