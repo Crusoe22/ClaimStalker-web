@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Page</title>
+    <link rel="stylesheet" href="/account-page.css">
+</head>
+<body>
+    <div class="account-container">
+        <h1>My Account</h1>
+
+        <!-- Profile Section -->
+        <section class="profile-section">
+            <h2>Profile Information</h2>
+            <div class="profile-info">
+                <label for="username">Username:</label>
+                <span id="username">johndoe123</span>
+
+                <label for="email">Email:</label>
+                <span id="email">johndoe@example.com</span>
+
+                <label for="phone">Phone Number:</label>
+                <span id="phone">(123) 456-7890</span>
+                
+                <button class="edit-profile-btn">Edit Profile</button>
+            </div>
+        </section>
+
+        <!-- Account Settings Section -->
+        <section class="settings-section">
+            <h2>Account Settings</h2>
+            <div class="settings">
+                <label for="language">Preferred Language:</label>
+                <select id="language" name="language">
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                </select>
+
+                <label for="timezone">Time Zone:</label>
+                <select id="timezone" name="timezone">
+                    <option value="est">Eastern Standard Time</option>
+                    <option value="pst">Pacific Standard Time</option>
+                    <option value="gmt">Greenwich Mean Time</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Security Section -->
+        <section class="security-section">
+            <h2>Security</h2>
+            <div class="security">
+                <label>Password:</label>
+                <button class="change-password-btn">Change Password</button>
+                
+                <label>Two-Factor Authentication:</label>
+                <button class="setup-2fa-btn">Enable 2FA</button>
+            </div>
+        </section>
+
+        <!-- Account Actions Section -->
+        <section class="actions-section">
+            <h2>Actions</h2>
+            <div class="actions">
+                <button class="logout-btn">Logout</button>
+                <button class="delete-account-btn">Delete Account</button>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
