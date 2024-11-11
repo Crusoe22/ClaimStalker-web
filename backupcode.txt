@@ -1,3 +1,62 @@
+config.js
+const mongoose = require('mongoose');
+const connect = mongoose.connect("mongodb://localhost:27017/Login-tut") //"C:\Program Files\MongoDB\Server\8.0\bin\mongod.exe"    mongoose.connect("mongodb://localhost:27017/Login-tut");
+
+// Check database connected or not
+connect.then(() => {
+    console.log("Database Connected Successfully");
+})
+.catch(() => {
+    console.log("Database cannot be Connected");
+})
+
+// Create Schema for Login
+const Loginschema = new mongoose.Schema({
+    name: {
+        type:String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    }
+});
+
+// collection part
+const collection = new mongoose.model("users", Loginschema);
+
+module.exports = collection;
+
+
+// Claim Data Schema
+const ClaimSchema = new mongoose.Schema({
+    email: { type: String, required: true },
+    name: { type: String, required: true },
+    phone: { type: String, required: true },
+    policyNumber: { type: String, required: true },
+    insuranceCompany: { type: String, required: true },
+    claimDate: { type: Date, required: true },
+    autoLoss: { type: String, required: true },
+    propertyLoss: { type: String, required: true },
+    location: { type: String, required: true },
+    description: { type: String, required: true }
+});
+
+const ClaimCollection = mongoose.model("claimdata", ClaimSchema);
+
+module.exports = { UserCollection: collection, ClaimCollection };
+
+
+
+
+
+
+
+
+
+
+index.js
+
 const express = require("express");
 const path = require("path");
 const collection = require("./config");
@@ -91,9 +150,39 @@ app.post("/login", async (req, res) => {
 
 
 
+// Claim submit data
+const { ClaimCollection } = require("./config");
+
+app.post("/submit-claim", async (req, res) => {
+    const claimData = {
+        email: req.body.email,
+        name: req.body.name,
+        phone: req.body.phone,
+        policyNumber: req.body.policyNumber,
+        insuranceCompany: req.body.insuranceCompany,
+        claimDate: req.body.claimDate,
+        autoLoss: req.body.autoLoss,
+        propertyLoss: req.body.propertyLoss,
+        location: req.body.location,
+        description: req.body.description
+    };
+
+    try {
+        const savedClaim = await ClaimCollection.create(claimData);
+        console.log("Claim saved successfully:", savedClaim);
+        res.send("Claim submitted successfully!");
+    } catch (error) {
+        console.error("Error saving claim:", error);
+        res.status(500).send("An error occurred while submitting your claim.");
+    }
+});
+
+
+
 
 // Define Port for Application
 const port = 5500;
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`)
 });
+
