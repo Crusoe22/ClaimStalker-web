@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit Claim Page</title>
     <link rel="stylesheet" href="claimsubmit-page.css">
+    <script src="/sendemail.js"></script>
+    <script
+        type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
+    ></script>
+    <script type="text/javascript">
+        (function () {
+        emailjs.init("XAK08bD4-jvsI0Ro0");
+        })();
+    </script>
 </head>
 <body>
 
@@ -85,7 +95,10 @@
             <input type="submit" value="Submit">
         </div>
 
+        <div>
+        </div>
     </form>
-
+    <button class="btn btn-primary"  onclick="sendMail()">Email Button</button>
 </body>
 </html>
+
