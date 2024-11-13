@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit Claim Page</title>
     <link rel="stylesheet" href="claimsubmit-page.css">
+    <!--Browser Script-->
     <script src="/sendemail.js"></script>
     <script
         type="text/javascript"
@@ -18,27 +19,14 @@
 </head>
 <body>
 
-    
+    <!-- Include Sidebar -->
+    <%- include('sidebar') %>
+
+    <!-- Main Account Content -->
+
+    <!--test email: S573653@nwmissouri.edu-->
     <form action="/submit-claim" method="POST">
         <h1>Submit Your Claim</h1>
-
-        <!-- Email -->
-        <div>
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="example@email.com" required>
-        </div>
-
-        <!-- Name -->
-        <div>
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" placeholder="John Doe" required>
-        </div>
-
-        <!-- Phone Number -->
-        <div>
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890" required>
-        </div>
 
         <!-- Policy Number -->
         <div>
@@ -50,6 +38,24 @@
         <div>
             <label for="insuranceCompany">Insurance Company Name</label>
             <input type="text" id="insuranceCompany" name="insuranceCompany" placeholder="Insurance Co." required>
+        </div>
+
+        <!-- Name -->
+        <div>
+            <label for="name">Insured Name</label>
+            <input type="text" id="name" name="name" placeholder="John Doe" required>
+        </div>
+
+        <!-- Email -->
+        <div>
+            <label for="email">Insured Email</label>
+            <input type="email" id="email" name="email" placeholder="example@email.com" required>
+        </div>
+
+        <!-- Phone Number -->
+        <div>
+            <label for="phone">Insured Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890" required>
         </div>
 
         <!-- Date of Loss -->
@@ -92,13 +98,12 @@
         <!-- Reset and Submit Buttons -->
         <div>
             <input type="reset" value="Reset">
-            <input type="submit" value="Submit">
+            <input type="submit" value="Submit"  onclick="sendMail()" > <!--TODO: make so it doesn't send to second page-->
         </div>
 
         <div>
         </div>
     </form>
-    <button class="btn btn-primary"  onclick="sendMail()">Email Button</button>
 </body>
 </html>
 

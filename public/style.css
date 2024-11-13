@@ -9,12 +9,21 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgb(0,212,255);
+    background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(9,98,121,1) 100%);
 }
 
 
 h2 {
-    text-align: center;
-    margin-bottom: 30px;
+    text-align: center; /* Keeps text centered */
+    font-size: 2rem; /* Larger font size for emphasis */
+    font-weight: 700; /* Semi-bold weight for a clean and professional look */
+    color: #333; /* Dark gray color for readability */
+    margin-bottom: 20px; /* Reduced bottom margin for a tighter layout */
+    text-transform: uppercase; /* Adds a modern touch by making text uppercase */
+    letter-spacing: 1px; /* Slightly spreads the letters for a more elegant look */
+    line-height: 1.4; /* Adjusts line height for readability */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
 .form-container {
@@ -23,6 +32,7 @@ h2 {
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    background-color: aliceblue;
   }
 
   .form-group {
@@ -31,8 +41,11 @@ h2 {
 
   .form-group label {
     display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
+    font-weight: Medium; /* Lighter weight for a softer look */
+    font-size: 18px; /* Standard font size for readability */
+    color: rgb(50, 69, 69); /* Medium gray color for text */
+    margin-bottom: 10px; /* Slightly more space between label and input */
+    transition: color 0.3s ease; /* Smooth transition for color changes */
   }
 
   .form-group input {

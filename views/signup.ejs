@@ -5,24 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SignUp</title>
     <link rel="stylesheet" href="/style.css">
+    <script src="/sendemail.js"></script>
 </head>
 <body>
 
     <div class="form-container">
-        <h2>SignUp</h2>
+        <h2>Sign Up</h2>
         <form action="/signup" method="post">
           <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="username" placeholder="Enter your name" required autocomplete="off">
+            <label for="name">Username:</label>
+            <input type="text" id="name" name="username" placeholder="Enter your new username" required autocomplete="off">
           </div>
           <div class="form-group">
-            <label for="password">password:</label>
-            <input type="password" id="password" name="password" placeholder="password" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter your new password" required>
           </div>
           <button type="submit" class="submit-btn">Submit</button>
         </form>
         <!-- Add link for "Already have an account Click here: Sign in"-->
+        <p>Already have an account? <a class="link" href="/login">Sign In</a></p>
       </div>
     
+
 </body>
 </html>

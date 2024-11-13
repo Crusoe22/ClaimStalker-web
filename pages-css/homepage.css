@@ -1,4 +1,4 @@
-/* Center and style the page */
+/* General page styling */
 body {
     display: flex;
     flex-direction: column;
@@ -6,43 +6,60 @@ body {
     justify-content: center;
     height: 100vh;
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern, clean font */
+    background-color: #f7f9fa; /* Slightly lighter background for a more polished look */
+    color: #333; /* Default text color for better readability */
+    line-height: 1.6;
 }
 
-/* Style the heading */
+/* Style the main heading */
 h1 {
-    margin-bottom: 20px;
-    font-size: 2em;
-    color: tomato;
+    margin-bottom: 40px;
+    font-size: 3em;
+    font-weight: 600;
+    color: #1877f2; /* Facebook blue color */
+    text-align: center;
+    text-transform: capitalize; /* Gives a more refined touch */
+    letter-spacing: 1px; /* Slightly spaced letters for a modern feel */
 }
 
-/* Style the buttons */
+/* Style for the buttons */
 a {
     text-decoration: none;
-    width: 25%;
+    width: 100%;
+    max-width: 320px; /* Limiting the width for a cleaner, centered layout */
 }
 
+/* Style button for a professional look */
 button {
     width: 100%;
-    padding: 20px;
-    margin: 10px 0;
-    font-size: 1.2em;
-    font-weight: bold;
-    color: white;
-    background-color: #007bff;
+    padding: 14px;
+    margin: 12px 0;
+    font-size: 1.1em;
+    font-weight: 500;
+    color: #fff;
+    background-color: #1877f2; /* Facebook blue */
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
 
 /* Hover and active effects for buttons */
 button:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
+    background-color: #1465a3; /* Slightly darker blue for hover */
+    transform: scale(1.05); /* Slight zoom effect on hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover */
 }
 
 button:active {
-    background-color: #003d82;
+    background-color: #0d3b6f; /* Even darker blue when clicked */
+    transform: scale(1); /* No zoom on active */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Restore the shadow to normal on click */
+}
+
+/* Add spacing between buttons */
+button + button {
+    margin-top: 20px; /* More space between buttons */
 }

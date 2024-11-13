@@ -1,22 +1,76 @@
+/* Style the Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh;
+    background-color: #ffffff;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 10; /* Ensure the sidebar is always on top */
+    overflow-y: auto; /* Allows vertical scrolling if content overflows */
+    max-height: 100vh; /* Ensures the sidebar stays within the viewport */
+}
+
+.sidebar h2 {
+    text-align: center;
+    border-bottom: 2px solid #007bff;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: #1877f2; /* Facebook blue */
+}
+
+.sidebar a {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.sidebar button {
+    width: 100%;
+    padding: 12px;
+    margin: 5px 0;
+    font-size: 1em;
+    font-weight: 500;
+    color: white;
+    background-color: #1877f2;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.sidebar button:hover {
+    background-color: #1465a3;
+}
+
+.sidebar button:active {
+    background-color: #0d3b6f;
+}
+
+
 /* General body styling */
 body {
     font-family: Arial, sans-serif;
-    background-color: lightskyblue;
+    background-color: whitesmoke;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: center; /* Center the content */
+    align-items: flex-start;
     min-height: 100vh;
     margin: 0;
+    padding-left: 270px; /* Leave space for the sidebar */
 }
 
 /* Account container styling */
 .account-container {
-    background-color: #ffffff;
+    background-color: white;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 900px;
-    width: 90%;
+    max-width: 1200px;
+    width: 90%; /* This ensures the container doesn't take up the entire width */
+    margin-right: 0px; 
 }
 
 /* Title styling */
@@ -28,7 +82,7 @@ h1 {
 }
 
 /* Section headings */
-h2 {
+.account-heading {
     color: #007bff;
     border-bottom: 2px solid #007bff;
     padding-bottom: 5px;
@@ -120,10 +174,14 @@ button {
 
 /* Responsive Design */
 @media (max-width: 600px) {
-    .account-container {
-        padding: 20px;
+    body {
+        padding-left: 0; /* Allow content to use full width on smaller screens */
     }
-
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
     button {
         width: 100%;
         margin-bottom: 10px;

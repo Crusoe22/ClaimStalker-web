@@ -7,12 +7,17 @@
     <link rel="stylesheet" href="/account-page.css">
 </head>
 <body>
+
+    <!-- Include Sidebar -->
+    <%- include('sidebar') %>
+
+    <!-- Main Account Content -->
     <div class="account-container">
         <h1>My Account</h1>
 
         <!-- Profile Section -->
         <section class="profile-section">
-            <h2>Profile Information</h2>
+            <h2 class="account-heading">Profile Information</h2>
             <div class="profile-info">
                 <label for="username">Username:</label>
                 <span id="username">johndoe123</span>
@@ -29,7 +34,7 @@
 
         <!-- Account Settings Section -->
         <section class="settings-section">
-            <h2>Account Settings</h2>
+            <h2 class="account-heading">Account Settings</h2>
             <div class="settings">
                 <label for="language">Preferred Language:</label>
                 <select id="language" name="language">
@@ -49,7 +54,7 @@
 
         <!-- Security Section -->
         <section class="security-section">
-            <h2>Security</h2>
+            <h2 class="account-heading">Security</h2>
             <div class="security">
                 <label>Password:</label>
                 <button class="change-password-btn">Change Password</button>
@@ -61,7 +66,7 @@
 
         <!-- Account Actions Section -->
         <section class="actions-section">
-            <h2>Actions</h2>
+            <h2 class="account-heading" >Actions</h2>
             <div class="actions">
                 <button class="logout-btn">Logout</button>
                 <button class="delete-account-btn">Delete Account</button>

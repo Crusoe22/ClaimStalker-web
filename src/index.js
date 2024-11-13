@@ -61,7 +61,10 @@ app.post("/signup", async (req, res) => {
     try {
         const newUser = await UserCollection.create(data);
         console.log("New user created:", newUser);
-        res.send("Registration successful!");
+        // Send a success message and redirect to login
+        res.send('<script>alert("Registration successful! Please log in."); window.location.href = "/login";</script>');
+        //alert.send("Registration successful!");//res.send("Registration successful!"); //TODO remove
+        //res.render("login", { message: "Registration successful! Please log in." });
     } catch (error) {
         console.error("Error registering user:", error);
         res.status(500).send("An error occurred during registration.");
@@ -107,14 +110,13 @@ app.post("/submit-claim", async (req, res) => {
     try {
         const savedClaim = await ClaimCollection.create(claimData);
         console.log("Claim saved successfully:", savedClaim);
-        res.send("Claim submitted successfully!");
+        // TODO: remove res.send("Claim submitted successfully!");
     } catch (error) {
         console.error("Error saving claim:", error);
         res.status(500).send("An error occurred while submitting your claim.");
     }
 });
 
-//TODO: Add email sending finctionality with EmailJS
 
 // Create claim viewer
 //const { ClaimCollection } = require("./config");
@@ -139,45 +141,6 @@ app.get("/view-claim", async (req, res) => {
         res.status(500).send("An error occurred while retrieving the claim.");
     }
 });
-
-
-
-// Send email button
-function sendMail() {
-    console.log("sendMail function is called"); // Add this line
-    var params = {
-      email: document.getElementById("email").value,
-      name: document.getElementById("name").value,
-      policyNumber: document.getElementById("policyNumber").value,
-      insuranceCompany: document.getElementById("insuranceCompany").value,
-      claimDate: document.getElementById("claimDate").value,
-      autoLoss: document.getElementById("autoLoss").value,
-      propertyLoss: document.getElementById("propertyLoss").value,
-      location: document.getElementById("location").value,
-      description: document.getElementById("description").value,
-      phone: document.getElementById("phone").value, // added phone number
-    };
-  
-    const serviceID = "service_y39lgic";
-    const templateID = "template_4xdsmtr";
-  
-    emailjs.send(serviceID, templateID, params)
-      .then(res => {
-          document.getElementById("email").value = "";
-          document.getElementById("name").value = "";
-          document.getElementById("policyNumber").value = "";
-          document.getElementById("insuranceCompany").value = "";
-          document.getElementById("claimDate").value = "";
-          document.getElementById("autoLoss").value = "";
-          document.getElementById("propertyLoss").value = "";
-          document.getElementById("location").value = "";
-          document.getElementById("description").value = "";
-          document.getElementById("phone").value = ""; // reset phone field
-          console.log(res);
-          alert("Your claim was sent successfully!");
-      })
-      .catch(err => console.log(err));
-}
 
 
 

@@ -29,7 +29,8 @@ function sendMail() {
           document.getElementById("description").value = "";
           document.getElementById("phone").value = "";
           console.log(res);
-          alert("Your claim was sent successfully!");
+          alert("Your claim was submitted successfully!");
       })
       .catch(err => console.log(err));
 }
+
