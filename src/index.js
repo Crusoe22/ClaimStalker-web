@@ -145,7 +145,7 @@ app.get("/view-claim", async (req, res) => {
 
 
 // Define port for the application
-const port = 5500;
+const port = 5000;
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });

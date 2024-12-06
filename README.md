@@ -5,6 +5,19 @@ Claim Stalker is a simple web application designed to help users input and manag
 ### This application is currently being hosted on GitHub pages
 link: https://crusoe22.github.io/ClaimStalker-web/ 
 
+## How to run code locally
+- install necessary packages/depenencies express, bcrypt, and any other packages listed in package.json: 
+    npm install
+
+- nodemon Not Installed: Install it globally with:
+    npm install -g nodemon
+
+1. Confirm you are in the correct location:
+    cd \Users\nolan\OneDrive\Documents\Personal JS applications\ClaimStalker-webapp\ClaimStalker-web
+2. Run in terminal:
+    nodemon src/index.js
+
+
 ## Table of Contents
 - [Project Structure](#project-structure)
 - [Features](#features)
@@ -20,7 +33,7 @@ The application is organized as follows:
 - `index.html` - The main entry point for the application.
 - `index.css` - Contains the styling for the app's user interface.
 - `index.js` - Manages the app's interactivity and logic.
-- `../pages-html/` - Contains the HTML structure for other pages.
+- `../views/` - Contains the HTML structure for other pages.
 - `../pages-css/` - Contains the CSS styling for other pages.
 
 ### Folder Path
