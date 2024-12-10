@@ -1,184 +1,86 @@
-/* Style the Sidebar */
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 250px;
-    height: 100vh;
-    background-color: whitesmoke;
-    /*box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);*/
-    padding: 20px;
-    box-sizing: border-box;
-    z-index: 10; /* Ensure the sidebar is always on top */
+#TODO: Write python code that sends emails 
+
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+# Email credentials
+sender_email = r"nolanmmoss@gmail.com"
+password = r"emet pnlp sdhm fhpk"  # Use your App Password or Gmail account password
+receiver_email = r"s573653@nwmissouri.edu"  # Replace with the recipient's email
+
+# Email content
+subject = "Test Email for Claim Stalker"
+body = """\
+Hi,
+
+This is an automated email sent using Python.
+
+Best regards,
+Nolan
+"""
+
+# Create the email
+message = MIMEMultipart()
+message["From"] = sender_email
+message["To"] = receiver_email
+message["Subject"] = subject
+
+# Attach the email body
+message.attach(MIMEText(body, "plain"))
+
+# Send the email
+try:
+    # Connect to the Gmail SMTP server
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        server.starttls()  # Upgrade the connection to a secure encrypted SSL/TLS connection
+        server.login(sender_email, password)  # Log in to your Gmail account
+        server.sendmail(sender_email, receiver_email, message.as_string())  # Send the email
+        print("Email sent successfully!")
+except Exception as e:
+    print(f"Error sending email: {e}")
+
+
+
+
+
+
+
+
+
+function sendMail() {
+  console.log("sendMail function is called");
+  var params = {
+      email: document.getElementById("email").value,
+      name: document.getElementById("name").value,
+      policyNumber: document.getElementById("policyNumber").value,
+      insuranceCompany: document.getElementById("insuranceCompany").value,
+      claimDate: document.getElementById("claimDate").value,
+      autoLoss: document.getElementById("autoLoss").value,
+      propertyLoss: document.getElementById("propertyLoss").value,
+      location: document.getElementById("location").value,
+      description: document.getElementById("description").value,
+      phone: document.getElementById("phone").value
+  };
+
+  const serviceID = "service_y39lgic";
+  const templateID = "template_4xdsmtr";
+
+  emailjs.send(serviceID, templateID, params)
+      .then(res => {
+          document.getElementById("email").value = "";
+          document.getElementById("name").value = "";
+          document.getElementById("policyNumber").value = "";
+          document.getElementById("insuranceCompany").value = "";
+          document.getElementById("claimDate").value = "";
+          document.getElementById("autoLoss").value = "";
+          document.getElementById("propertyLoss").value = "";
+          document.getElementById("location").value = "";
+          document.getElementById("description").value = "";
+          document.getElementById("phone").value = "";
+          console.log(res);
+          alert("Your claim was submitted successfully!");
+      })
+      .catch(err => console.log(err));
 }
 
-.sidebar h2 {
-    font-size: 1.5em;
-    margin-bottom: 20px;
-    color: #1877f2; /* Facebook blue */
-}
-
-.sidebar a {
-    display: block;
-    margin-bottom: 10px;
-}
-
-.sidebar button {
-    width: 100%;
-    padding: 12px;
-    margin: 5px 0;
-    font-size: 1em;
-    font-weight: 500;
-    color: white;
-    background-color: #1877f2;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.sidebar button:hover {
-    background-color: #1465a3;
-}
-
-.sidebar button:active {
-    background-color: #0d3b6f;
-}
-
-/* General body styling */
-body {
-    font-family: Arial, sans-serif;
-    background-color: whitesmoke;
-    display: flex;
-    justify-content: center; /* Center the content */
-    align-items: flex-start;
-    min-height: 100vh;
-    margin: 0;
-    padding-left: 270px; /* Leave space for the sidebar */
-}
-
-/* Account container styling */
-.account-container {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 1000px;
-    width: 90%; /* This ensures the container doesn't take up the entire width */
-    margin: 0 auto; /* This centers the container horizontally */
-}
-
-/* Title styling */
-h1 {
-    text-align: center;
-    color: #0056b3;
-    font-size: 1.8em;
-    margin-bottom: 20px;
-}
-
-/* Section headings */
-h2 {
-    color: #007bff;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 5px;
-    margin-top: 20px;
-}
-
-/* Profile and settings details */
-.profile-info, .settings, .security, .actions {
-    margin-top: 10px;
-}
-
-.profile-info label,
-.settings label,
-.security label {
-    font-weight: bold;
-    color: #333;
-    margin-top: 10px;
-    display: block;
-}
-
-.profile-info span,
-.settings select,
-.security button {
-    display: block;
-    margin: 5px 0 15px 0;
-}
-
-/* Input and select styling */
-select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
-    color: #333;
-    background-color: #f3f8fb;
-}
-
-/* Button styling */
-button {
-    font-size: 1em;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 10px;
-    display: inline-block;
-    width: 100%;
-}
-
-/* Specific button colors */
-.edit-profile-btn {
-    background-color: #007bff;
-    color: white;
-}
-
-.change-password-btn, .setup-2fa-btn {
-    background-color: #17a2b8;
-    color: white;
-}
-
-.logout-btn {
-    background-color: #ffc107;
-    color: white;
-}
-
-.delete-account-btn {
-    background-color: #dc3545;
-    color: white;
-}
-
-/* Hover effects */
-.edit-profile-btn:hover {
-    background-color: #0056b3;
-}
-
-.change-password-btn:hover, .setup-2fa-btn:hover {
-    background-color: #138496;
-}
-
-.logout-btn:hover {
-    background-color: #e0a800;
-}
-
-.delete-account-btn:hover {
-    background-color: #c82333;
-}
-
-/* Responsive Design */
-@media (max-width: 600px) {
-    body {
-        padding-left: 0; /* Allow content to use full width on smaller screens */
-    }
-    .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-    }
-    button {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-}

@@ -10,7 +10,7 @@ password = r"emet pnlp sdhm fhpk"  # Use your App Password or Gmail account pass
 receiver_email = r"s573653@nwmissouri.edu"  # Replace with the recipient's email
 
 # Email content
-subject = "Automated Email"
+subject = "Test Email for Claim Stalker"
 body = """\
 Hi,
 
