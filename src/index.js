@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const { UserCollection, ClaimCollection } = require("./config"); // Import collections as per your config.js file
 const bcrypt = require('bcrypt');
+const nodemailer = require("nodemailer");
 
 const app = express();
 
@@ -40,6 +41,12 @@ app.get("/login", (req, res) => {
 app.get("/signup", (req, res) => {
     res.render("signup");
 });
+
+// Email page route
+app.get("/email-page", (req, res) => {
+    res.render("index"); // Render the email-sending button page
+});
+
 
 // Register User
 app.post("/signup", async (req, res) => {
@@ -92,30 +99,6 @@ app.post("/login", async (req, res) => {
     }
 });
 
-// Claim submission route
-app.post("/submit-claim", async (req, res) => {
-    const claimData = {
-        email: req.body.email,
-        name: req.body.name,
-        phone: req.body.phone,
-        policyNumber: req.body.policyNumber,
-        insuranceCompany: req.body.insuranceCompany,
-        claimDate: req.body.claimDate,
-        autoLoss: req.body.autoLoss,
-        propertyLoss: req.body.propertyLoss,
-        location: req.body.location,
-        description: req.body.description
-    };
-
-    try {
-        const savedClaim = await ClaimCollection.create(claimData);
-        console.log("Claim saved successfully:", savedClaim);
-        // TODO: remove res.send("Claim submitted successfully!");
-    } catch (error) {
-        console.error("Error saving claim:", error);
-        res.status(500).send("An error occurred while submitting your claim.");
-    }
-});
 
 
 // Create claim viewer
@@ -140,6 +123,77 @@ app.get("/view-claim", async (req, res) => {
         console.error("Error retrieving claim:", error);
         res.status(500).send("An error occurred while retrieving the claim.");
     }
+});
+
+
+
+// Route to handle sending email and submitting claim to database
+app.post("/submit-and-send-email", async (req, res) => {
+    const claimData = {
+        email: req.body.email,
+        name: req.body.name,
+        phone: req.body.phone,
+        policyNumber: req.body.policyNumber,
+        insuranceCompany: req.body.insuranceCompany,
+        claimDate: req.body.claimDate,
+        autoLoss: req.body.autoLoss,
+        propertyLoss: req.body.propertyLoss,
+        location: req.body.location,
+        description: req.body.description
+    };
+
+    try {
+        // Save claim data to the database
+        const savedClaim = await ClaimCollection.create(claimData);
+        console.log("Claim saved successfully:", savedClaim);
+    } catch (error) {
+        console.error("Error saving claim:", error);
+        return res.status(500).send("An error occurred while submitting your claim.");
+    }
+
+    // Configure Nodemailer transporter
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+            user: "nolanmmoss@gmail.com", // Use environment variable for security
+            pass: "emet pnlp sdhm fhpk"  // Use environment variable for security
+        }
+    });
+
+    // Email options
+    const mailOptions = {
+        from: '"CLAIM STALKER" <nolanmmoss@gmail.com>',
+        to: claimData.email,
+        subject: "Claim Submission Notification",
+        text: `Hello ${claimData.name},\n\nYour claim has been submitted successfully.`,
+        html: `
+            <p>Hello <b>${claimData.name}</b>,</p>
+            <p>Your claim has been submitted successfully with the following details:</p>
+            <ul>
+                <li>Email: ${claimData.email}</li>
+                <li>Phone Number: ${claimData.phone}</li>
+                <li>Policy Number: ${claimData.policyNumber}</li>
+                <li>insuranceCompany: ${claimData.insuranceCompany}</li>
+                <li>Claim Date: ${claimData.claimDate}</li>
+                <li>Auto Loss: ${claimData.autoLoss}</li>
+                <li>Property Loss: ${claimData.propertyLoss}</li>
+                <li>Location: ${claimData.location}</li>
+                <li>Description: ${claimData.description}</li>
+            </ul>
+        `
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error(`Error: ${error.message}`);
+            return res.status(500).send("Email could not be sent.");
+        }
+        console.log(`Email sent: ${info.response}`);
+        res.send("Claim submitted and email sent successfully!"); //TODO: remove this so it doesn't send to secound page. Maybe change to a pop up
+    });
 });
 
 

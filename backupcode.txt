@@ -1,3 +1,5 @@
+send-email.py
+
 #TODO: Write python code that sends emails 
 
 import smtplib
@@ -46,7 +48,7 @@ except Exception as e:
 
 
 
-
+sendmail.js
 
 function sendMail() {
   console.log("sendMail function is called");
@@ -84,3 +86,24 @@ function sendMail() {
       .catch(err => console.log(err));
 }
 
+
+
+    # Email content
+    subject = f"New Claim Submitted by {name}"
+    body = f"""
+    Hi Team,
+
+    A new claim has been submitted:
+    - Name: {name}
+    - Policy Number: {policy_number}
+    - Insurance Company: {insurance_company}
+    - Claim Date: {claim_date}
+    - Auto Loss: {auto_loss}
+    - Property Loss: {property_loss}
+    - Location: {location}
+    - Description: {description}
+    - Phone: {phone}
+
+    Best regards,
+    Automated System
+    """
