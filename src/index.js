@@ -199,7 +199,8 @@ app.post("/submit-and-send-email", async (req, res) => {
 
 
 // Define port for the application
-const port = 5000;
+// Making port change for render.com
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
