@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const { UserCollection, ClaimCollection } = require("./config"); // Import collections as per your config.js file
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const nodemailer = require("nodemailer");
 
 const app = express();
