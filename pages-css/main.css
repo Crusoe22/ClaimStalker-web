@@ -4,18 +4,18 @@
     color: #fff;
     padding: 10px 0;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
 }
-.navbar a button {
+.login-btn {
     background: #fff;
     color: #333;
     border: none;
     padding: 8px 16px;
-    margin-right: 20px;
     border-radius: 4px;
     cursor: pointer;
+    margin-right: 20px;
 }
-.navbar a button:hover {
+.login-btn:hover {
     background: #ddd;
 }
