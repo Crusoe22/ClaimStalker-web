@@ -2,8 +2,8 @@
 
 Claim Stalker is a simple web application designed to help users input and manage basic claim information. Built using HTML, CSS, and JavaScript, this app allows users to enter claim details such as Claim ID, Name, and Phone Number. The data is then processed and managed within the app, providing an organized way to keep track of claims.
 
-### This application is currently being hosted on GitHub pages
-link: https://crusoe22.github.io/ClaimStalker-web/ 
+### This application is currently being hosted on Render
+link: https://claimstalker-web.onrender.com/homepage 
 
 ## How to run code locally
 - install necessary packages/depenencies express, bcrypt, and any other packages listed in package.json: 
