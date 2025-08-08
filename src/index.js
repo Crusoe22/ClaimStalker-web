@@ -18,6 +18,10 @@ app.use(express.static("pages-css"));
 app.set("view engine", "ejs");
 
 // Routes for rendering pages
+app.get("/", (req, res) => {
+    res.render("main");
+});
+
 app.get('/account-page', (req, res) => {
     res.render('account-page');
 });
