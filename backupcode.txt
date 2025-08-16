@@ -8,7 +8,7 @@ from email.mime.multipart import MIMEMultipart
 
 # Email credentials
 sender_email = r"claimstalker@gmail.com"
-password = r"!!1Claimstalker4me@@%%"  # Use your App Password or Gmail account password
+password = r"ftdl nztx aqpy dhtg"  # Use your App Password or Gmail account password
 receiver_email = r"phil.moss.sr@gmail.com"  # Replace with the recipient's email
 
 # Email content
