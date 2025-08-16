@@ -1,15 +1,15 @@
 send-email.py
 
-#TODO: Write python code that sends emails 
+#TODO: Write python code that sends emails.
 
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # Email credentials
-sender_email = r"nolanmmoss@gmail.com"
+sender_email = r"claimstalker@gmail.com"
 password = r"emet pnlp sdhm fhpk"  # Use your App Password or Gmail account password
-receiver_email = r"s573653@nwmissouri.edu"  # Replace with the recipient's email
+receiver_email = r"!!1Claimstalker4me@@%%"  # Replace with the recipient's email
 
 # Email content
 subject = "Test Email for Claim Stalker"
