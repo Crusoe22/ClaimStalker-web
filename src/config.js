@@ -1,45 +1,24 @@
-const mongoose = require('mongoose');
+const { Sequelize, DataTypes } = require('sequelize');
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => {
-        console.log("Database Connected Successfully");
-    })
-    .catch((error) => {
-        console.log("Database cannot be Connected:", error);
-    });
-
-// Create Schema for Login
-const LoginSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
-    }
+// Connect to PostgreSQL
+const sequelize = new Sequelize(process.env.POSTGRES_URI, {
+    dialect: 'postgres',
+    logging: false,
 });
 
-// Create User Collection
-const UserCollection = mongoose.model("users", LoginSchema);
-
-// Claim Data Schema
-const ClaimSchema = new mongoose.Schema({
-    email: { type: String, required: true },
-    name: { type: String, required: true },
-    phone: { type: String, required: true },
-    policyNumber: { type: String, required: true },
-    insuranceCompany: { type: String, required: true },
-    claimDate: { type: Date, required: true },
-    autoLoss: { type: String, required: true },
-    propertyLoss: { type: String, required: true },
-    location: { type: String, required: true },
-    description: { type: String, required: true }
+// Define Claim model
+const Claim = sequelize.define('Claim', {
+    email: { type: DataTypes.STRING, allowNull: false },
+    name: { type: DataTypes.STRING, allowNull: false },
+    phone: { type: DataTypes.STRING, allowNull: false },
+    policyNumber: { type: DataTypes.STRING, allowNull: false },
+    insuranceCompany: { type: DataTypes.STRING, allowNull: false },
+    claimDate: { type: DataTypes.DATE, allowNull: false },
+    autoLoss: { type: DataTypes.STRING, allowNull: false },
+    propertyLoss: { type: DataTypes.STRING, allowNull: false },
+    location: { type: DataTypes.STRING, allowNull: false },
+    description: { type: DataTypes.STRING, allowNull: false },
 });
 
-// Create Claim Collection
-const ClaimCollection = mongoose.model("claimdata", ClaimSchema);
-
-// Export collections
-module.exports = { UserCollection, ClaimCollection };
+// Export the model
+module.exports = { Claim, sequelize };
