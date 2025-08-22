@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const { UserCollection, ClaimCollection } = require("./config"); // Import collections as per your config.js file
+const { Claim, User, sequelize } = require("./config"); // Updated import for Sequelize models
 const bcrypt = require('bcryptjs');
 const nodemailer = require("nodemailer");
 
@@ -48,9 +48,8 @@ app.get("/signup", (req, res) => {
 
 // Email page route
 app.get("/email-page", (req, res) => {
-    res.render("index"); // Render the email-sending button page
+    res.render("index");
 });
-
 
 // Register User
 app.post("/signup", async (req, res) => {
@@ -60,7 +59,7 @@ app.post("/signup", async (req, res) => {
     };
 
     // Check if the username already exists in the database
-    const existingUser = await UserCollection.findOne({ name: data.name });
+    const existingUser = await User.findOne({ where: { name: data.name } });
     if (existingUser) {
         return res.send('User already exists. Please choose a different username.');
     }
@@ -70,12 +69,9 @@ app.post("/signup", async (req, res) => {
     data.password = await bcrypt.hash(data.password, saltRounds);
 
     try {
-        const newUser = await UserCollection.create(data);
+        const newUser = await User.create(data);
         console.log("New user created:", newUser);
-        // Send a success message and redirect to login
         res.send('<script>alert("Registration successful! Please log in."); window.location.href = "/login";</script>');
-        //alert.send("Registration successful!");//res.send("Registration successful!"); //TODO remove
-        //res.render("login", { message: "Registration successful! Please log in." });
     } catch (error) {
         console.error("Error registering user:", error);
         res.status(500).send("An error occurred during registration.");
@@ -85,12 +81,11 @@ app.post("/signup", async (req, res) => {
 // Login user
 app.post("/login", async (req, res) => {
     try {
-        const user = await UserCollection.findOne({ name: req.body.username });
+        const user = await User.findOne({ where: { name: req.body.username } });
         if (!user) {
             return res.send("Username not found.");
         }
 
-        // Compare the hashed password from the database with the plaintext password
         const isPasswordMatch = await bcrypt.compare(req.body.password, user.password);
         if (!isPasswordMatch) {
             return res.send("Incorrect password.");
@@ -103,11 +98,6 @@ app.post("/login", async (req, res) => {
     }
 });
 
-
-
-// Create claim viewer
-//const { ClaimCollection } = require("./config");
-
 // Render the viewclaims-page form
 app.get("/viewclaims-page", (req, res) => {
     res.render("viewclaims-page", { claim: null });
@@ -118,18 +108,13 @@ app.get("/view-claim", async (req, res) => {
     const policyNumber = req.query.policyNumber;
 
     try {
-        // Find the claim in the database
-        const claim = await ClaimCollection.findOne({ policyNumber: policyNumber });
-
-        // Render the page with claim data if found, or display a message if not found
+        const claim = await Claim.findOne({ where: { policyNumber: policyNumber } });
         res.render("viewclaims-page", { claim });
     } catch (error) {
         console.error("Error retrieving claim:", error);
         res.status(500).send("An error occurred while retrieving the claim.");
     }
 });
-
-
 
 // Route to handle sending email and submitting claim to database
 app.post("/submit-and-send-email", async (req, res) => {
@@ -147,8 +132,7 @@ app.post("/submit-and-send-email", async (req, res) => {
     };
 
     try {
-        // Save claim data to the database
-        const savedClaim = await ClaimCollection.create(claimData);
+        const savedClaim = await Claim.create(claimData);
         console.log("Claim saved successfully:", savedClaim);
     } catch (error) {
         console.error("Error saving claim:", error);
@@ -161,14 +145,14 @@ app.post("/submit-and-send-email", async (req, res) => {
         port: 587,
         secure: false,
         auth: {
-            user: "nolanmmoss@gmail.com", // Use environment variable for security
-            pass: "emet pnlp sdhm fhpk"  // Use environment variable for security
+            user: process.env.EMAIL_USER, // Use environment variable for security
+            pass: process.env.EMAIL_PASS  // Use environment variable for security
         }
     });
 
     // Email options
     const mailOptions = {
-        from: '"CLAIM STALKER" <nolanmmoss@gmail.com>',
+        from: '"CLAIM STALKER" <noreply@claimstalker.com>',
         to: claimData.email,
         subject: "Claim Submission Notification",
         text: `Hello ${claimData.name},\n\nYour claim has been submitted successfully.`,
@@ -179,7 +163,7 @@ app.post("/submit-and-send-email", async (req, res) => {
                 <li>Email: ${claimData.email}</li>
                 <li>Phone Number: ${claimData.phone}</li>
                 <li>Policy Number: ${claimData.policyNumber}</li>
-                <li>insuranceCompany: ${claimData.insuranceCompany}</li>
+                <li>Insurance Company: ${claimData.insuranceCompany}</li>
                 <li>Claim Date: ${claimData.claimDate}</li>
                 <li>Auto Loss: ${claimData.autoLoss}</li>
                 <li>Property Loss: ${claimData.propertyLoss}</li>
@@ -189,22 +173,22 @@ app.post("/submit-and-send-email", async (req, res) => {
         `
     };
 
-    // Send the email
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.error(`Error: ${error.message}`);
             return res.status(500).send("Email could not be sent.");
         }
         console.log(`Email sent: ${info.response}`);
-        res.send("Claim submitted and email sent successfully!"); //TODO: remove this so it doesn't send to secound page. Maybe change to a pop up
+        res.send("Claim submitted and email sent successfully!");
     });
 });
 
-
-
-// Define port for the application
-// Making port change for render.com
+// Sync Sequelize models and start server
 const port = process.env.PORT || 5000;
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+sequelize.sync().then(() => {
+    app.listen(port, () => {
+        console.log(`Server listening on port ${port}`);
+    });
+}).catch(err => {
+    console.error("Failed to sync database:", err);
 });
