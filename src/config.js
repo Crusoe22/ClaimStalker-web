@@ -1,14 +1,10 @@
+// config.js
 const { Sequelize, DataTypes } = require('sequelize');
 
+// Connect to PostgreSQL
 const sequelize = new Sequelize(process.env.POSTGRES_URI, {
     dialect: 'postgres',
     logging: false,
-    dialectOptions: {
-        ssl: {
-            require: true,
-            rejectUnauthorized: false
-        }
-    }
 });
 
 // Define Claim model
@@ -25,9 +21,11 @@ const Claim = sequelize.define('Claim', {
     description: { type: DataTypes.STRING, allowNull: false },
 });
 
-// Test connection
-sequelize.authenticate()
-    .then(() => console.log('✅ Database connected successfully'))
-    .catch(err => console.error('❌ Database connection error:', err));
+// Define User model
+const User = sequelize.define('User', {
+    name: { type: DataTypes.STRING, allowNull: false, unique: true },
+    password: { type: DataTypes.STRING, allowNull: false },
+});
 
-module.exports = { Claim, sequelize };
+// Export models + sequelize instance
+module.exports = { Claim, User, sequelize };
