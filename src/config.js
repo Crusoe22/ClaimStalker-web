@@ -8,7 +8,7 @@ const sequelize = new Sequelize(process.env.POSTGRES_URI, {
 });
 
 // Define Claim model
-const Claim = sequelize.define('Claims', {
+const Claim = sequelize.define('Claim', {
     email: { type: DataTypes.STRING, allowNull: false },
     name: { type: DataTypes.STRING, allowNull: false },
     phone: { type: DataTypes.STRING, allowNull: false },
@@ -22,7 +22,7 @@ const Claim = sequelize.define('Claims', {
 });
 
 // Define User model
-const User = sequelize.define('Users', {
+const User = sequelize.define('User', {
     name: { type: DataTypes.STRING, allowNull: false, unique: true },
     password: { type: DataTypes.STRING, allowNull: false },
 });
