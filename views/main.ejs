@@ -4,21 +4,91 @@
     <meta charset="UTF-8">
     <title>ClaimStalker - Welcome</title>
     <link rel="stylesheet" href="/main.css">
-    <link rel="icon" type="image/jpg" href="/images/Imagecrop2.jpg">
+    <link rel="icon" type="image/jpg" href="images\icon1.png">
 </head>
 <body>
+    <!-- Navigation Bar -->
     <header class="navbar">
-        <h1>ClaimStalker</h1>
+        <div class="logo">ClaimStalker</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#team">Our Team</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </nav>
         <a href="/login">
             <button class="login-btn">Login</button>
         </a>
     </header>
-    <main>
-        <h2>Welcome to ClaimStalker</h2>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Track Your Insurance Claims With Ease</h1>
+            <p>ClaimStalker makes managing and monitoring your insurance claims simple, secure, and stress-free.</p>
+            <a href="/signup" class="cta-btn">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <h2>Why Choose ClaimStalker?</h2>
+        <div class="feature-grid">
+            <div class="feature">
+                <img src="images\Secure.png" alt="Secure">
+                <h3>Secure</h3>
+                <p>Your data is encrypted and protected with enterprise-grade security.</p>
+            </div>
+            <div class="feature">
+                <img src="images\Fast.png" alt="Fast">
+                <h3>Fast</h3>
+                <p>Submit and track claims instantly with real-time updates.</p>
+            </div>
+            <div class="feature">
+                <img src="images\Reliable.png" alt="Reliable">
+                <h3>Reliable</h3>
+                <p>Built to handle claims seamlessly for individuals and businesses alike.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="team">
+        <h2>Meet Our Team</h2>
+        <div class="team-grid">
+            <!-- Replace placeholder with actual photos -->
+            <div class="team-member">
+                <img src="images\Nolan Moss.jpg" alt="Founder Photo">
+                <h3>Nolan Moss</h3>
+                <p>Co-Founder & Lead Developer</p>
+            </div>
+            <div class="team-member">
+                <img src="images\Phil Moss.jpg" alt="Co-Founder 1">
+                <h3>Phil Moss</h3>
+                <p>Head of janitorial services</p>
+            </div>
+            <div class="team-member">
+                <img src="images\Phil Moss Sr.jpg" alt="Co-Founder 2">
+                <h3>Phil Moss Sr.</h3>
+                <p>SWE Intern</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <h2>About ClaimStalker</h2>
         <p>
-            ClaimStalker helps you manage and track your insurance claims efficiently.<br>
-            Our company is dedicated to providing secure, fast, and reliable claim processing for all users.
+            Founded with the vision to simplify insurance claim management, ClaimStalker is built 
+            for customers who want transparency, speed, and peace of mind. Our platform is constantly 
+            evolving to meet the needs of our users.
         </p>
-    </main>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; <%= new Date().getFullYear() %> ClaimStalker. All rights reserved.</p>
+    </footer>
 </body>
 </html>
