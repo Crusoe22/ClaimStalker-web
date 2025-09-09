@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-
-    <link rel="stylesheet" href="/style.css">
+    <title>ClaimStalker - Login</title>
+    <link rel="stylesheet" href="/registerlogin-page.css">
+    <link rel="icon" type="image/jpg" href="/images/Imagecrop2.jpg">
 </head>
 <body>
-    <div class="form-container">
-        <h2>Sign In</h2>
-        <form action="/login" method="post">
-          <div class="form-group">
-            <label for="name">Username:</label>
-            <input type="text" id="name" name="username" placeholder="Enter your username" required autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" placeholder="Enter your password" required>
-          </div>
-          <button type="submit" class="submit-btn">Login</button>
-        </form>
-        <p>Don't have an account? <a class="link" href="/signup">Sign Up</a></p>
-        <p>Forgot your password? <a class="link" href="/forgot-password">Lost Password</a></p>
-      </div>
-    
+    <div class="container">
+        <div class="form-box">
+            <h1>Sign In</h1>
+            <form action="/login" method="post" class="input-group">
+                <div class="input-field">
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required autocomplete="off">
+                </div>
+                <div class="input-field">
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <div class="btn-field">
+                    <button type="submit">Login</button>
+                </div>
+                <p>Don’t have an account? <a href="/signup">Sign Up</a></p>
+                <p><a href="/forgot-password">Forgot your password?</a></p>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
