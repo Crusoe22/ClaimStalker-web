@@ -1,65 +1,105 @@
-/* General page styling */
+/* Reset & body */
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern, clean font */
-    background-color: #f7f9fa; /* Slightly lighter background for a more polished look */
-    color: #333; /* Default text color for better readability */
-    line-height: 1.6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6fc;
+    color: #333;
 }
 
-/* Style the main heading */
-h1 {
-    margin-bottom: 40px;
-    font-size: 3em;
-    font-weight: 600;
-    color: #1877f2; /* Facebook blue color */
-    text-align: center;
-    text-transform: capitalize; /* Gives a more refined touch */
-    letter-spacing: 1px; /* Slightly spaced letters for a modern feel */
+/* Top Navbar */
+.navbar {
+    background: #1877f2;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 30px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-/* Style for the buttons */
-a {
+.navbar .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.navbar nav a.logout-btn {
+    color: white;
+    background: rgba(255,255,255,0.2);
+    padding: 8px 16px;
+    border-radius: 6px;
     text-decoration: none;
-    width: 100%;
-    max-width: 320px; /* Limiting the width for a cleaner, centered layout */
-}
-
-/* Style button for a professional look */
-button {
-    width: 100%;
-    padding: 14px;
-    margin: 12px 0;
-    font-size: 1.1em;
     font-weight: 500;
-    color: #fff;
-    background-color: #1877f2; /* Facebook blue */
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    transition: background 0.3s;
 }
 
-/* Hover and active effects for buttons */
-button:hover {
-    background-color: #1465a3; /* Slightly darker blue for hover */
-    transform: scale(1.05); /* Slight zoom effect on hover */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover */
+.navbar nav a.logout-btn:hover {
+    background: rgba(255,255,255,0.35);
 }
 
-button:active {
-    background-color: #0d3b6f; /* Even darker blue when clicked */
-    transform: scale(1); /* No zoom on active */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Restore the shadow to normal on click */
+/* Dashboard layout */
+.dashboard {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    text-align: center;
 }
 
-/* Add spacing between buttons */
-button + button {
-    margin-top: 20px; /* More space between buttons */
+.dashboard h1 {
+    font-size: 2.2em;
+    color: #1877f2;
+    margin-bottom: 10px;
+}
+
+.dashboard .intro-text {
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 40px;
+}
+
+/* Card grid */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s, box-shadow 0.3s;
+    text-align: left;
+}
+
+.card h2 {
+    margin-top: 0;
+    font-size: 1.3em;
+    color: #1877f2;
+}
+
+.card p {
+    font-size: 0.95em;
+    color: #555;
+    margin-top: 8px;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .dashboard h1 {
+        font-size: 1.8em;
+    }
+    .card {
+        padding: 20px;
+    }
 }

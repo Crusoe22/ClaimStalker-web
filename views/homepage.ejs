@@ -3,34 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Dashboard | Claim Stalker</title>
     <link rel="stylesheet" href="/homepage.css">
     <link rel="icon" type="image/jpg" href="/images/Imagecrop2.jpg">
 </head>
 <body>
-    <h1>Go to:</h1>
 
-    <a href="/claimsubmit-page">
-        <button >Submit a Claim</button>
-    </a>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <div class="logo">Claim Stalker</div>
+        <nav>
+            <a href="/login" class="logout-btn">Logout</a>
+        </nav>
+    </header>
 
-    <a href="/account-page">
-        <button >Account Page</button>
-    </a>
+    <!-- Main Dashboard -->
+    <main class="dashboard">
+        <h1>Welcome Back!</h1>
+        <p class="intro-text">Choose an option below to continue managing your claims.</p>
 
-    <a href="/registerlogin-page">
-        <button >Register Login Page for new</button>
-    </a>
+        <div class="card-grid">
+            <a href="/claimsubmit-page" class="card">
+                <h2>📝 Submit a Claim</h2>
+                <p>Start a new claim and notify your insurance provider.</p>
+            </a>
 
-    <a href="/viewclaims-page">
-        <button >View Claims</button>
-    </a>
+            <a href="/viewclaims-page" class="card">
+                <h2>📄 View Claims</h2>
+                <p>Search, view, and track the status of your submitted claims.</p>
+            </a>
 
-    <a href="/login">
-        <button >Logout</button>
-    </a>
-    
-    <!--TODO: testtes-->
+            <a href="/account-page" class="card">
+                <h2>👤 Account</h2>
+                <p>Manage your personal details and policy information.</p>
+            </a>
+
+            <a href="/registerlogin-page" class="card">
+                <h2>🔑 Register / Login</h2>
+                <p>Create a new account or manage your login credentials.</p>
+            </a>
+        </div>
+    </main>
 
 </body>
 </html>
