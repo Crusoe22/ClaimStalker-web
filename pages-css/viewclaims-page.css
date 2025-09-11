@@ -1,161 +1,90 @@
-/* Style the Sidebar */
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 200px;
-    height: 100vh;
-    background-color: #ffffff;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    box-sizing: border-box;
-    z-index: 10; /* Ensure the sidebar is always on top */
-    overflow-y: auto; /* Allows vertical scrolling if content overflows */
-    max-height: 100vh; /* Ensures the sidebar stays within the viewport */
+/* Main Content Layout */
+.main-content {
+    margin-left: 220px; /* space for sidebar */
+    padding: 2rem;
+    max-width: 900px;
 }
 
-.sidebar h2 {
-    text-align: center;
-    border-bottom: 2px solid #007bff;
-    font-size: 1.5em;
-    margin-bottom: 20px;
-    color: #1877f2; /* Facebook blue */
+/* Header */
+header {
+    margin-bottom: 2rem;
 }
-
-.sidebar a {
-    display: block;
-    margin-bottom: 10px;
-}
-
-.sidebar button {
-    width: 100%;
-    padding: 12px;
-    margin: 5px 0;
-    font-size: 1em;
-    font-weight: 500;
-    color: white;
-    background-color: #1877f2;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.sidebar button:hover {
-    background-color: #1465a3;
-}
-
-.sidebar button:active {
-    background-color: #0d3b6f;
-}
-
-
-/* Reset default styling */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
-/* Body Styling */
-body {
-    background-color: #f3f4f6;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-}
-
-/* Page Title */
-h1 {
+header h1 {
     color: #4a4e69;
     font-size: 2rem;
-    margin-bottom: 1.5rem;
+}
+header p {
+    color: #555;
+    margin-top: 0.5rem;
 }
 
-/* Form Styling */
-form {
-    background-color: #fff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+/* Search Form */
+.search-form {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 2rem;
+}
+.search-form .form-group {
+    display: flex;
     width: 100%;
     max-width: 500px;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
 }
-
-form label {
-    font-weight: bold;
-    color: #555;
-}
-
-form input[type="text"] {
-    padding: 0.6rem;
+.search-form input {
+    flex: 1;
+    padding: 0.8rem;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 6px 0 0 6px;
     font-size: 1rem;
 }
-
-form button {
-    padding: 0.6rem;
+.search-form button {
+    padding: 0.8rem 1.2rem;
     border: none;
-    border-radius: 4px;
-    background-color: #4a4e69;
-    color: #fff;
-    font-weight: bold;
-    font-size: 1rem;
+    background: #4a4e69;
+    color: white;
+    border-radius: 0 6px 6px 0;
     cursor: pointer;
+    font-weight: bold;
     transition: background 0.3s;
 }
-
-form button:hover {
-    background-color: #9a8c98;
+.search-form button:hover {
+    background: #9a8c98;
 }
 
-/* Claim Details Container */
-.claim-details {
-    background-color: #fff;
+/* Claim Card */
+.claim-card {
+    background: #fff;
     padding: 2rem;
-    margin-top: 2rem;
-    border-radius: 8px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 600px;
-    border: 2px solid #4a4e69; /* Adding border for distinction */
-    background-color: #fafafa; /* Light background for the claim box */
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+    border-left: 6px solid #4a4e69;
 }
-
-/* Claim Box Heading */
-.claim-details h2 {
-    color: #4a4e69;
+.claim-card h2 {
     margin-bottom: 1.5rem;
-    font-size: 1.75rem;
-    border-bottom: 2px solid #4a4e69; /* Subtle line under heading */
-    padding-bottom: 0.5rem;
+    color: #4a4e69;
 }
-
-/* Styling for the Claim Details Paragraphs */
-.claim-details p {
-    margin-bottom: 1rem;
-    line-height: 1.6;
+.claim-info p {
+    margin-bottom: 0.8rem;
+    font-size: 1.05rem;
+}
+.claim-info strong {
     color: #333;
-    font-size: 1.1rem;
 }
-
-.claim-details p strong {
-    color: #555;
+.actions {
+    margin-top: 1.5rem;
 }
-
-/* No Results Message */
-.no-results {
-    margin-top: 1rem;
-    color: #b56576;
+.actions a {
+    text-decoration: none;
+    color: #1877f2;
     font-weight: bold;
-    text-align: center;
+}
+
+/* No Results */
+.no-results {
+    background: #fff3f3;
+    border: 1px solid #f5c2c7;
+    padding: 1rem;
+    border-radius: 8px;
+    color: #a94442;
+    font-weight: bold;
+    max-width: 500px;
 }

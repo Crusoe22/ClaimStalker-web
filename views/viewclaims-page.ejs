@@ -3,39 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Claim</title>
+    <title>View Claims</title>
     <link rel="stylesheet" href="/viewclaims-page.css">
     <link rel="icon" type="image/jpg" href="/images/Imagecrop2.jpg">
 </head>
-
 <body>
-    <!-- Include Sidebar -->
+    <!-- Sidebar -->
     <%- include('sidebar') %>
 
-    <h1>View Claim</h1>
-    <form action="/view-claim" method="GET">
-        <label for="policyNumber">Policy Number:</label>
-        <input type="text" id="policyNumber" name="policyNumber" required>
-        <button type="submit">Search</button>
-    </form>
+    <!-- Main Content -->
+    <div class="main-content">
+        <header>
+            <h1>View Your Claims</h1>
+            <p>Search by Policy Number to view submitted claims.</p>
+        </header>
 
-    <% if (claim) { %>
-        <!-- Claim Details Box -->
-        <div class="claim-details">
-            <h2>Claim Details</h2>
-            <p><strong>Email:</strong> <%= claim.email %></p>
-            <p><strong>Name:</strong> <%= claim.name %></p>
-            <p><strong>Phone:</strong> <%= claim.phone %></p>
-            <p><strong>Policy Number:</strong> <%= claim.policyNumber %></p>
-            <p><strong>Insurance Company:</strong> <%= claim.insuranceCompany %></p>
-            <p><strong>Date of Loss:</strong> <%= claim.claimDate.toDateString() %></p>
-            <p><strong>Auto Loss:</strong> <%= claim.autoLoss %></p>
-            <p><strong>Property Loss:</strong> <%= claim.propertyLoss %></p>
-            <p><strong>Location:</strong> <%= claim.location %></p>
-            <p><strong>Description:</strong> <%= claim.description %></p>
+        <!-- Search Form -->
+        <form action="/view-claim" method="GET" class="search-form">
+            <div class="form-group">
+                <input type="text" id="policyNumber" name="policyNumber" placeholder="Enter Policy Number..." required>
+                <button type="submit">🔍 Search</button>
+            </div>
+        </form>
+
+        <!-- Results Section -->
+        <div class="results">
+            <% if (claim) { %>
+                <div class="claim-card">
+                    <h2>Claim Details</h2>
+                    <div class="claim-info">
+                        <p><strong>Email:</strong> <%= claim.email %></p>
+                        <p><strong>Name:</strong> <%= claim.name %></p>
+                        <p><strong>Phone:</strong> <%= claim.phone %></p>
+                        <p><strong>Policy Number:</strong> <%= claim.policyNumber %></p>
+                        <p><strong>Insurance Company:</strong> <%= claim.insuranceCompany %></p>
+                        <p><strong>Date of Loss:</strong> <%= claim.claimDate.toDateString() %></p>
+                        <p><strong>Auto Loss:</strong> <%= claim.autoLoss %></p>
+                        <p><strong>Property Loss:</strong> <%= claim.propertyLoss %></p>
+                        <p><strong>Location:</strong> <%= claim.location %></p>
+                        <p><strong>Description:</strong> <%= claim.description %></p>
+                    </div>
+                    <div class="actions">
+                        <a href="/view-claim">🔄 New Search</a>
+                    </div>
+                </div>
+            <% } else if (typeof claim !== 'undefined') { %>
+                <div class="no-results">
+                    <p>⚠️ No claim found for the provided policy number.</p>
+                </div>
+            <% } %>
         </div>
-    <% } else if (typeof claim !== 'undefined') { %>
-        <p>No claim found for the provided policy number.</p>
-    <% } %>
+    </div>
 </body>
 </html>
