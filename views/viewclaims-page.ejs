@@ -3,49 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Claims</title>
+    <title>View Claim Status</title>
     <link rel="stylesheet" href="/viewclaims-page.css">
     <link rel="icon" type="image/jpg" href="/images/Imagecrop2.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
-    <!-- Sidebar -->
     <%- include('sidebar') %>
 
-    <main class="content">
-        <h1>View Claims</h1>
+    <main class="page-content">
+        <h1 class="page-title">Check Your Claim Status</h1>
 
-        <!-- Search Form -->
-        <form action="/view-claim" method="GET" class="search-form">
-            <label for="policyNumber">Policy Number:</label>
-            <input type="text" id="policyNumber" name="policyNumber" placeholder="Enter policy number..." required>
-            <button type="submit">Search</button>
-        </form>
+        <div class="search-container">
+            <form action="/view-claim" method="GET" class="search-form">
+                <label for="policyNumber" class="search-label">Enter Policy Number:</label>
+                <input type="text" id="policyNumber" name="policyNumber" required placeholder="e.g., A1B2-C3D4-E5F6" class="search-input">
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+        </div>
 
-        <!-- Search Results -->
-        <% if (claims && claims.length > 0) { %>
-            <p class="results-count"><%= claims.length %> claim(s) found for Policy Number <strong><%= claims[0].policyNumber %></strong></p>
-
-            <div class="claims-list">
-                <% claims.forEach(function(claim, index) { %>
-                    <div class="claim-card">
-                        <h2>Claim #<%= index + 1 %></h2>
-                        <div class="claim-grid">
-                            <p><strong>Name:</strong> <%= claim.name %></p>
-                            <p><strong>Email:</strong> <%= claim.email %></p>
-                            <p><strong>Phone:</strong> <%= claim.phone %></p>
-                            <p><strong>Insurance Company:</strong> <%= claim.insuranceCompany %></p>
-                            <p><strong>Date of Loss:</strong> <%= claim.claimDate.toDateString() %></p>
-                            <p><strong>Auto Loss:</strong> <%= claim.autoLoss %></p>
-                            <p><strong>Property Loss:</strong> <%= claim.propertyLoss %></p>
-                            <p><strong>Location:</strong> <%= claim.location %></p>
-                        </div>
-                        <p class="description"><strong>Description:</strong> <%= claim.description %></p>
+        <% if (claim) { %>
+            <div class="claim-details-container">
+                <h2 class="section-title">Claim Details for Policy #<%= claim.policyNumber %></h2>
+                <div class="claim-info-grid">
+                    <div class="info-card">
+                        <i class="fas fa-user-circle info-icon"></i>
+                        <h3 class="info-label">Contact Information</h3>
+                        <p><strong>Name:</strong> <%= claim.name %></p>
+                        <p><strong>Email:</strong> <%= claim.email %></p>
+                        <p><strong>Phone:</strong> <%= claim.phone %></p>
                     </div>
-                <% }); %>
+                    <div class="info-card">
+                        <i class="fas fa-building info-icon"></i>
+                        <h3 class="info-label">Policy & Company</h3>
+                        <p><strong>Policy Number:</strong> <%= claim.policyNumber %></p>
+                        <p><strong>Insurance Company:</strong> <%= claim.insuranceCompany %></p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-calendar-alt info-icon"></i>
+                        <h3 class="info-label">Loss Information</h3>
+                        <p><strong>Date of Loss:</strong> <%= claim.claimDate.toDateString() %></p>
+                        <p><strong>Location:</strong> <%= claim.location %></p>
+                        <% if (claim.autoLoss) { %>
+                            <p><strong>Auto Loss:</strong> Yes</p>
+                        <% } %>
+                        <% if (claim.propertyLoss) { %>
+                            <p><strong>Property Loss:</strong> Yes</p>
+                        <% } %>
+                    </div>
+                    <div class="info-card full-width-card">
+                        <i class="fas fa-info-circle info-icon"></i>
+                        <h3 class="info-label">Description of Loss</h3>
+                        <p><%= claim.description %></p>
+                    </div>
+                </div>
             </div>
-        <% } else if (typeof claims !== 'undefined') { %>
-            <p class="no-results">No claims found for the provided policy number.</p>
+        <% } else if (typeof claim !== 'undefined') { %>
+            <div class="no-results-message">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>No claim was found with that policy number. Please double-check the number and try again.</p>
+            </div>
         <% } %>
     </main>
 </body>
