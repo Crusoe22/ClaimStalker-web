@@ -7,51 +7,46 @@
     <link rel="stylesheet" href="/viewclaims-page.css">
     <link rel="icon" type="image/jpg" href="/images/Imagecrop2.jpg">
 </head>
+
 <body>
     <!-- Sidebar -->
     <%- include('sidebar') %>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <header>
-            <h1>View Your Claims</h1>
-            <p>Search by Policy Number to view submitted claims.</p>
-        </header>
+    <main class="content">
+        <h1>View Claims</h1>
 
         <!-- Search Form -->
         <form action="/view-claim" method="GET" class="search-form">
-            <div class="form-group">
-                <input type="text" id="policyNumber" name="policyNumber" placeholder="Enter Policy Number..." required>
-                <button type="submit">🔍 Search</button>
-            </div>
+            <label for="policyNumber">Policy Number:</label>
+            <input type="text" id="policyNumber" name="policyNumber" placeholder="Enter policy number..." required>
+            <button type="submit">Search</button>
         </form>
 
-        <!-- Results Section -->
-        <div class="results">
-            <% if (claims && claims.length > 0) { %>
+        <!-- Search Results -->
+        <% if (claims && claims.length > 0) { %>
+            <p class="results-count"><%= claims.length %> claim(s) found for Policy Number <strong><%= claims[0].policyNumber %></strong></p>
+
+            <div class="claims-list">
                 <% claims.forEach(function(claim, index) { %>
                     <div class="claim-card">
-                        <h2>Claim <%= index + 1 %></h2>
-                        <div class="claim-info">
-                            <p><strong>Email:</strong> <%= claim.email %></p>
+                        <h2>Claim #<%= index + 1 %></h2>
+                        <div class="claim-grid">
                             <p><strong>Name:</strong> <%= claim.name %></p>
+                            <p><strong>Email:</strong> <%= claim.email %></p>
                             <p><strong>Phone:</strong> <%= claim.phone %></p>
-                            <p><strong>Policy Number:</strong> <%= claim.policyNumber %></p>
                             <p><strong>Insurance Company:</strong> <%= claim.insuranceCompany %></p>
                             <p><strong>Date of Loss:</strong> <%= claim.claimDate.toDateString() %></p>
                             <p><strong>Auto Loss:</strong> <%= claim.autoLoss %></p>
                             <p><strong>Property Loss:</strong> <%= claim.propertyLoss %></p>
                             <p><strong>Location:</strong> <%= claim.location %></p>
-                            <p><strong>Description:</strong> <%= claim.description %></p>
                         </div>
+                        <p class="description"><strong>Description:</strong> <%= claim.description %></p>
                     </div>
-                <% }) %>
-            <% } else if (typeof claims !== 'undefined') { %>
-                <div class="no-results">
-                    <p>⚠️ No claims found for the provided policy number.</p>
-                </div>
-            <% } %>
-        </div>
-    </div>
+                <% }); %>
+            </div>
+        <% } else if (typeof claims !== 'undefined') { %>
+            <p class="no-results">No claims found for the provided policy number.</p>
+        <% } %>
+    </main>
 </body>
 </html>
