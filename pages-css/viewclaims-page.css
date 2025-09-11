@@ -2,7 +2,7 @@
 .main-content {
     margin-left: 220px; /* space for sidebar */
     padding: 2rem;
-    max-width: 900px;
+    max-width: 1000px;
 }
 
 /* Header */
@@ -50,6 +50,13 @@ header p {
     background: #9a8c98;
 }
 
+/* Results Layout */
+.results {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
 /* Claim Card */
 .claim-card {
     background: #fff;
@@ -68,14 +75,6 @@ header p {
 }
 .claim-info strong {
     color: #333;
-}
-.actions {
-    margin-top: 1.5rem;
-}
-.actions a {
-    text-decoration: none;
-    color: #1877f2;
-    font-weight: bold;
 }
 
 /* No Results */
