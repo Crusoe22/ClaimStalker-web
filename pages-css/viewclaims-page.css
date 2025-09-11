@@ -162,3 +162,48 @@ body {
     font-size: 2.5rem;
     margin-bottom: 15px;
 }
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background: linear-gradient(180deg, #1877f2, #0056b3);
+    padding: 20px;
+    box-sizing: border-box;
+    color: white;
+    box-shadow: 2px 0 6px rgba(0,0,0,0.15);
+}
+
+.sidebar h2 {
+    text-align: center;
+    font-size: 1.4em;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 10px;
+}
+
+.sidebar a {
+    text-decoration: none;
+}
+
+.sidebar button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    font-size: 1em;
+    font-weight: 500;
+    color: white;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.sidebar button:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.02);
+}
