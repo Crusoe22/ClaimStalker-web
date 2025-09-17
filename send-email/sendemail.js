@@ -1,5 +1,6 @@
 function sendMail(event) {
     console.log("sendMail function is called");
+
     var params = {
       email: document.getElementById("email").value,
       name: document.getElementById("name").value,
@@ -13,20 +14,16 @@ function sendMail(event) {
       phone: document.getElementById("phone").value
     }; 
   
-    fetch('/sendtest-email', {   // relative path (works on Render)
+    fetch('/submit-and-send-email', {   // ✅ match your backend route
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(params)
     })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        alert("Your claim was submitted successfully!");
-      } else {
-        alert("Failed to send the email. Please try again.");
-      }
+    .then(res => res.text())
+    .then(message => {
+      alert(message);
     })
     .catch(err => console.error(err));
 }
