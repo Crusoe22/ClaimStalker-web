@@ -1,5 +1,4 @@
 function sendMail(event) {
-    //event.preventDefault(); // Prevents the form from reloading the page
     console.log("sendMail function is called");
     var params = {
       email: document.getElementById("email").value,
@@ -12,9 +11,9 @@ function sendMail(event) {
       location: document.getElementById("location").value,
       description: document.getElementById("description").value,
       phone: document.getElementById("phone").value
-    };
+    }; 
   
-    fetch('http://localhost:5000/sendtest-email', {
+    fetch('/sendtest-email', {   // relative path (works on Render)
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -30,5 +29,4 @@ function sendMail(event) {
       }
     })
     .catch(err => console.error(err));
-  }
-  
+}
