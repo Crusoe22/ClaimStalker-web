@@ -23,27 +23,27 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label for="policyNumber">Policy Number</label>
-                    <input type="text" id="policyNumber" name="policyNumber" required>
+                    <input type="text" id="policyNumber" name="policyNumber" placeholder="Policy Number" required>
                 </div>
 
                 <div class="form-group">
                     <label for="insuranceCompany">Insurance Company</label>
-                    <input type="text" id="insuranceCompany" name="insuranceCompany" required>
+                    <input type="text" id="insuranceCompany" name="insuranceCompany" placeholder="Insurance Co." required>
                 </div>
 
                 <div class="form-group">
                     <label for="name">Insured Name</label>
-                    <input type="text" id="name" name="name" required>
+                    <input type="text" id="name" name="name" placeholder="John Doe" required>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Insured Email</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" placeholder="example@email.com" required>
                 </div>
 
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" required>
+                    <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890" required>
                 </div>
 
                 <div class="form-group">
@@ -69,12 +69,12 @@
 
                 <div class="form-group full-width">
                     <label for="location">Location of Loss</label>
-                    <input type="text" id="location" name="location" required>
+                    <input type="text" id="location" name="location" placeholder="123 Main St, Springfield" required>
                 </div>
 
                 <div class="form-group full-width">
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" rows="4" required></textarea>
+                    <textarea id="description" name="description" rows="4" placeholder="Describe the claim..." required></textarea>
                 </div>
             </div>
 
@@ -132,6 +132,7 @@
          // Function to close modal
         function closeModal() {
             modal.style.display = "none";
+            window.location.reload(); // Refresh the page after closing modal
         }
 
         // Allow close modal if user clicks outside the box
