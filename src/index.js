@@ -180,8 +180,8 @@ app.post("/submit-and-send-email", async (req, res) => {
     }
     console.log(`Email sent: ${info.response}`);
     res.json({ success: true, message: "Claim submitted and email sent successfully!" });
+    });
 });
-
 
 // Sync Sequelize models and start server
 const port = process.env.PORT || 5000;
