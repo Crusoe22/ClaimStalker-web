@@ -174,14 +174,14 @@ app.post("/submit-and-send-email", async (req, res) => {
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error(`Error: ${error.message}`);
-            return res.status(500).send("Email could not be sent.");
-        }
-        console.log(`Email sent: ${info.response}`);
-        res.send("Claim submitted and email sent successfully!");
-    });
+    if (error) {
+        console.error(`Error: ${error.message}`);
+        return res.status(500).json({ success: false, message: "Email could not be sent." });
+    }
+    console.log(`Email sent: ${info.response}`);
+    res.json({ success: true, message: "Claim submitted and email sent successfully!" });
 });
+
 
 // Sync Sequelize models and start server
 const port = process.env.PORT || 5000;
