@@ -3,16 +3,6 @@
 Claim Stalker is a simple web application designed to help users input and manage basic claim information. Built using HTML, CSS, and JavaScript, this app allows users to enter claim details such as Claim ID, Name, and Phone Number. The data is then processed and managed within the app, providing an organized way to keep track of claims.
 
 
-### Git add and commit
-```bash
-Pull code into saved repo
-git pull origin main
-
-git add .
-git commit -m "add .gitignore, readme, and requirements"
-git push origin main
-```
-
 ### 🌐 Live Deployment
 The Claim Stalker application is currently hosted on **Render**.
 
@@ -32,27 +22,30 @@ The Claim Stalker application is currently hosted on **Render**.
     nodemon src/index.js
 
 
+### Git add and commit
+```bash
+Pull code into saved repo
+git pull origin main
+
+git add .
+git commit -m "add .gitignore, readme, and requirements"
+git push origin main
+```
+
+
 ## Table of Contents
-- [Project Structure](#project-structure)
+- [Overview](#Overview)
 - [Features](#features)
 - [Technologies](#technologies)
 - [Getting Started](#getting-started)
-- [Usage](#usage)
 - [Future Enhancements](#future-enhancements)
 - [License](#license)
 
-## Project Structure
-
-The application is organized as follows:
-- `index.html` - The main entry point for the application.
-- `index.css` - Contains the styling for the app's user interface.
-- `index.js` - Manages the app's interactivity and logic.
-- `../views/` - Contains the HTML structure for other pages.
-- `../pages-css/` - Contains the CSS styling for other pages.
-
-### Folder Path
-The project files are located in:
-
+### Overview
+- **Frontend:** Built with HTML, CSS, and EJS templates for rendering dynamic content.  
+- **Backend:** Powered by Node.js and Express, with routes defined in `src/index.js`.  
+- **Database:** PostgreSQL (schema defined in `database_creation/newtables.sql`).  
+- **Email Service:** Outgoing email notifications handled by `send-email/sendemail.js`.  
 
 
 ## Features
@@ -61,11 +54,14 @@ The project files are located in:
 - **Simple and Organized Interface**: Clean design focused on ease of use.
 - **Front-End Focus**: Pure HTML, CSS, and JavaScript currently without back-end data storage.
 
+
 ## Technologies
 
 - **HTML** - For creating the structure of the web pages.
 - **CSS** - For styling and responsive design.
 - **JavaScript** - For handling user interactions and logic.
+- **Postgres** - Used for data storage
+
 
 ## Getting Started
 
@@ -74,10 +70,7 @@ To run Claim Stalker locally, follow these steps:
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/your-username/claim-stalker.git
-
-
-## Usage
-1. Open the application by launching searching www.claimstalker.com
+   ```
 
 
 ## Future Enhancements
@@ -93,7 +86,7 @@ To run Claim Stalker locally, follow these steps:
 - View Claims by searching with the policy number
 
 
-## Submit Claims
+## Submit Claims Page
 
 The **Submit Claims** page allows users to submit new insurance claims.  
 When a claim is submitted, the information is:
