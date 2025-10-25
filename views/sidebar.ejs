@@ -4,5 +4,15 @@
     <a href="/claimsubmit-page"><button>📝 Submit Claim</button></a>
     <a href="/viewclaims-page"><button>📄 View Claims</button></a>
     <a href="/account-page"><button>👤 Account</button></a>
-    <a href="/login"><button>🚪 Logout</button></a>
+    <a href="/login" id="sidebarLogout"><button>Logout</button></a>
 </div>
+
+<script>
+    // Sidebar logout confirmation
+    document.getElementById("sidebarLogout").addEventListener("click", function(event) {
+        const confirmLogout = confirm("Are you sure you want to log out?");
+        if (!confirmLogout) {
+            event.preventDefault(); // Cancel logout
+        }
+    });
+</script>
