@@ -19,13 +19,18 @@ const Claim = sequelize.define('Claim', {
     propertyLoss: { type: DataTypes.STRING, allowNull: false },
     location: { type: DataTypes.STRING, allowNull: false },
     description: { type: DataTypes.STRING, allowNull: false },
+}, {
+    tableName: "Claims" // specify custom table name
 });
 
 // Define User model
 const User = sequelize.define('User', {
     name: { type: DataTypes.STRING, allowNull: false, unique: true },
     password: { type: DataTypes.STRING, allowNull: false },
-});
+}, {
+    tableName: "Users" // specify custom table name
+}
+);
 
 // Export models + sequelize instance
 module.exports = { Claim, User, sequelize };

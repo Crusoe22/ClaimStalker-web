@@ -84,20 +84,12 @@ To run Claim Stalker locally, follow these steps:
 
 
 ## Future Enhancements
+- User Authentication: Add login and user-specific claim management. (Currently all users can access the entire database)
+- Add different search options for view claims page. 
+- Add submission dates
+
+
+## Active Functionality 
 - Back-End Integration: Connect to a database to store claim details persistently.
-- User Authentication: Add login and user-specific claim management.
-- Additional Data Fields: Enable users to enter more comprehensive claim details.
-- Data Search: Include search and filter options for managing multiple claims.
-- Mobile Compatibility: Ensure responsive design for better usability on mobile devices.
-
-    ## Login and Sign Up
-    - This code creates a database connection to MongoDB locally
-    - In the sign up page it enter new user information
-        - Passwords are hashed in database
-    - Checks if user already created
-
-    #### Check if page is working
-    - Download all packages locally in package.json
-        - use npm install bcrypt ejs express mongoose
-    - This will open page locally 
-        nodemon src/index.js
+- Submit a Claim: Insert all claim information and submit. This sends all information to the data base (PostgreSQL) and sends an email. 
+- View Claims by searching with the policy number

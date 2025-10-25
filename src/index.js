@@ -30,9 +30,10 @@ app.get('/claimsubmit-page', (req, res) => {
     res.render('claimsubmit-page');
 });
 
+/* Removed registerlogin-page route as separate login and signup routes are implemented
 app.get('/registerlogin-page', (req, res) => {
     res.render('registerlogin-page');
-});
+});*/
 
 app.get('/homepage', (req, res) => {
     res.render('homepage');
