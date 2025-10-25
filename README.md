@@ -13,8 +13,11 @@ git commit -m "add .gitignore, readme, and requirements"
 git push origin main
 ```
 
-### This application is currently being hosted on Render
-link: https://claimstalker-web.onrender.com/homepage 
+### 🌐 Live Deployment
+The Claim Stalker application is currently hosted on **Render**.
+
+**Access it here:** [www.claimstalker.com](https://www.claimstalker.com)
+
 
 ## How to run code locally
 - install necessary packages/depenencies express, bcrypt, and any other packages listed in package.json: 
@@ -74,13 +77,7 @@ To run Claim Stalker locally, follow these steps:
 
 
 ## Usage
-1. Open the application by launching index.html.
-2. On the home page, enter the claim details in the input fields provided:
-    - Policy No.
-    - Name
-    - Phone Number
-    - etc...
-3. Future functionalities may include submitting the claim details or saving them.
+1. Open the application by launching searching www.claimstalker.com
 
 
 ## Future Enhancements
@@ -94,3 +91,39 @@ To run Claim Stalker locally, follow these steps:
 - Back-End Integration: Connect to a database to store claim details persistently.
 - Submit a Claim: Insert all claim information and submit. This sends all information to the data base (PostgreSQL) and sends an email. 
 - View Claims by searching with the policy number
+
+
+## Submit Claims
+
+The **Submit Claims** page allows users to submit new insurance claims.  
+When a claim is submitted, the information is:
+
+- **Stored** in the PostgreSQL database table named `"Claims"`.  
+- **Sent via email** notification (sent to email entered in text box).
+
+### Database Fields
+
+Below are the columns and data types received by the `"Claims"` table:
+
+| Column Name        | Data Type                      | Description                                |
+|--------------------|--------------------------------|--------------------------------------------|
+| `id`               | integer                        | Primary key (auto-incremented)             |
+| `claimDate`        | timestamp with time zone        | Date of the claim incident                 |
+| `createdAt`        | timestamp with time zone        | Record creation timestamp (Sequelize)      |
+| `updatedAt`        | timestamp with time zone        | Record update timestamp (Sequelize)        |
+| `agency_id`        | integer                        | Foreign key reference to `Agencies` table  |
+| `carrier_id`       | integer                        | Foreign key reference to `Carriers` table  |
+| `description`      | character varying               | Description of the claim                   |
+| `autoLoss`         | character varying               | Type of automobile loss                    |
+| `propertyLoss`     | character varying               | Type of property loss                      |
+| `location`         | character varying               | Location of the incident                   |
+| `email`            | character varying               | Customer email address                     |
+| `name`             | character varying               | Customer full name                         |
+| `phone`            | character varying               | Customer phone number                      |
+| `policyNumber`     | character varying               | Policy number associated with the claim     |
+| `insuranceCompany` | character varying               | Insurance company name                     |
+
+---
+
+
+
