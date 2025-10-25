@@ -86,7 +86,8 @@ To run Claim Stalker locally, follow these steps:
 ## Future Enhancements
 - User Authentication: Add login and user-specific claim management. (Currently all users can access the entire database)
 - Add different search options for view claims page. 
-- Add submission dates
+- Add submission dates for claim submission. 
+- Connect Ivans API to provide additional functionality. 
 
 
 ## Active Functionality 
