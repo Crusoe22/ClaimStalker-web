@@ -47,6 +47,10 @@ app.get("/signup", (req, res) => {
     res.render("signup");
 });
 
+app.get("/customer-claim-submit", (req, res) => {
+    res.render("customer-claim-submit");
+});
+
 // Email page route
 app.get("/email-page", (req, res) => {
     res.render("index");
