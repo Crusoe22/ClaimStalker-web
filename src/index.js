@@ -60,29 +60,33 @@ app.get("/email-page", (req, res) => {
 // Register User
 app.post("/signup", async (req, res) => {
     const data = {
-        name: req.body.username,
+        username: req.body.username,      // matches your DB column
+        name: req.body.name || req.body.username, // display name
+        email: req.body.email || "",
+        phone: req.body.phone || "",
         password: req.body.password
     };
 
-    // Check if the username already exists in the database
-    const existingUser = await User.findOne({ where: { name: data.name } });
+    // Check if the username already exists
+    const existingUser = await User.findOne({ where: { username: data.username } });
     if (existingUser) {
         return res.send('User already exists. Please choose a different username.');
     }
 
-    // Hash the password using bcrypt
+    // Hash the password
     const saltRounds = 10;
     data.password = await bcrypt.hash(data.password, saltRounds);
 
     try {
         const newUser = await User.create(data);
-        console.log("New user created:", newUser);
+        console.log("New user created:", newUser.username);
         res.send('<script>alert("Registration successful! Please log in."); window.location.href = "/login";</script>');
     } catch (error) {
         console.error("Error registering user:", error);
         res.status(500).send("An error occurred during registration.");
     }
 });
+
 
 // Login user
 app.post("/login", async (req, res) => {

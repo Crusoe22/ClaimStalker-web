@@ -22,7 +22,7 @@ body, html {
 
 .form-box {
     width: 90%;
-    max-width: 400px;
+    max-width: 450px; /* slightly wider to fit extra fields */
     background: #fff;
     padding: 50px 40px;
     border-radius: 12px;
@@ -54,9 +54,10 @@ body, html {
     margin-top: 20px;
 }
 
+/* Input fields */
 .input-field {
     background: #f1f1f1;
-    margin: 15px 0;
+    margin: 12px 0; /* slightly smaller spacing to fit more fields */
     border-radius: 8px;
     overflow: hidden;
 }
@@ -70,13 +71,14 @@ body, html {
     background: transparent;
 }
 
+/* Button */
 .btn-field {
     margin-top: 20px;
 }
 
 .btn-field button {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     background: #045fe8;
     color: #fff;
     border: none;
@@ -91,6 +93,7 @@ body, html {
     background: #0347b5;
 }
 
+/* Paragraphs */
 p {
     margin-top: 15px;
     font-size: 14px;
@@ -107,7 +110,19 @@ p a:hover {
     text-decoration: underline;
 }
 
+/* Fade-in animation */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive tweaks */
+@media (max-width: 500px) {
+    .form-box {
+        padding: 40px 20px;
+    }
+
+    .form-box h1 {
+        font-size: 24px;
+    }
 }

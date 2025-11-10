@@ -12,15 +12,37 @@
         <div class="form-box">
             <h1>Create Account</h1>
             <form action="/signup" method="post" class="input-group">
+
+                <!-- Full Name -->
                 <div class="input-field">
-                    <input type="text" id="username" name="username" placeholder="Enter a new username" required autocomplete="off">
+                    <input type="text" id="name" name="name" placeholder="Full Name" required autocomplete="off">
                 </div>
+
+                <!-- Username -->
                 <div class="input-field">
-                    <input type="password" id="password" name="password" placeholder="Enter a new password" required>
+                    <input type="text" id="username" name="username" placeholder="Choose a Username" required autocomplete="off">
                 </div>
+
+                <!-- Email -->
+                <div class="input-field">
+                    <input type="email" id="email" name="email" placeholder="Email Address" required autocomplete="off">
+                </div>
+
+                <!-- Phone -->
+                <div class="input-field">
+                    <input type="tel" id="phone" name="phone" placeholder="Phone Number (e.g. 555-123-4567)" required autocomplete="off">
+                </div>
+
+                <!-- Password -->
+                <div class="input-field">
+                    <input type="password" id="password" name="password" placeholder="Create a Password" required>
+                </div>
+
+                <!-- Submit -->
                 <div class="btn-field">
                     <button type="submit">Sign Up</button>
                 </div>
+
                 <p>Already have an account? <a href="/login">Sign In</a></p>
             </form>
         </div>
