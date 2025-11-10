@@ -6,6 +6,8 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require("nodemailer");
 const session = require('express-session');
 
+const app = express();
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'secret-key', // set a strong secret in production
   resave: false,
@@ -14,7 +16,6 @@ app.use(session({
 }));
 
 
-const app = express();
 
 // Convert data to JSON format
 app.use(express.json());
@@ -44,6 +45,7 @@ app.get('/claimsubmit-page', (req, res) => {
 app.get('/registerlogin-page', (req, res) => {
     res.render('registerlogin-page');
 });*/
+
 
 app.get('/homepage', (req, res) => {
     res.render('homepage');
