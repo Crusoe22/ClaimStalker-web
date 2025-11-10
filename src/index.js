@@ -218,14 +218,9 @@ sequelize.sync().then(() => {
 // Account page route
 app.get("/account/:id", async (req, res) => {
   try {
-    const userId = req.params.id;
-    const user = await Users.findByPk(userId); // Sequelize method
+    const user = await User.findByPk(req.params.id);
+    if (!user) return res.status(404).send("User not found");
 
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-
-    // Render the EJS template with user data
     res.render("account-page", { user });
   } catch (err) {
     console.error("Error fetching user data:", err);

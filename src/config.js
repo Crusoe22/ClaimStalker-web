@@ -23,6 +23,7 @@ const Claim = sequelize.define('Claim', {
     tableName: "Claims" // specify custom table name
 });
 
+/*
 // Define User model
 const User = sequelize.define('User', {
     name: { type: DataTypes.STRING, allowNull: false, unique: true },
@@ -30,7 +31,17 @@ const User = sequelize.define('User', {
 }, {
     tableName: "Users" // specify custom table name
 }
-);
+);*/
+
+// Define User model
+const User = sequelize.define('User', {
+    username: { type: DataTypes.STRING, allowNull: false, unique: true },
+    email: { type: DataTypes.STRING, allowNull: false, unique: true },
+    phone: { type: DataTypes.STRING },
+    password: { type: DataTypes.STRING, allowNull: false },
+}, {
+    tableName: "Users"
+});
 
 // Export models + sequelize instance
 module.exports = { Claim, User, sequelize };
