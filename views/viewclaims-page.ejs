@@ -14,16 +14,33 @@
 
     <main class="page-content">
         <h1 class="page-title">Check Your Claim Status</h1>
-
+        
+        <!-- Search Section -->
         <div class="search-container">
             <form action="/view-claim" method="GET" class="search-form">
-                <label for="policyNumber" class="search-label">Enter Policy Number:</label>
-                <input type="text" id="policyNumber" name="policyNumber" required placeholder="e.g., A1B2-C3D4-E5F6" class="search-input">
+                <label for="searchType" class="search-label">Search By:</label>
+                <select id="searchType" name="searchType" class="search-select">
+                    <option value="policyNumber">Policy Number</option>
+                    <option value="name">Name</option>
+                    <option value="phone">Phone Number</option>
+                </select>
+
+                <input 
+                    type="text" 
+                    id="searchValue" 
+                    name="searchValue" 
+                    required 
+                    placeholder="Enter your search value..." 
+                    class="search-input"
+                >
+
                 <button type="submit" class="search-button">
                     <i class="fas fa-search"></i> Search
                 </button>
             </form>
         </div>
+
+        <!-- Claim Results -->
 
         <% if (claim) { %>
             <div class="claim-details-container">

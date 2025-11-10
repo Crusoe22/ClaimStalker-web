@@ -109,15 +109,26 @@ app.get("/viewclaims-page", (req, res) => {
 });
 
 // Search for a claim by policy number
-app.get("/view-claim", async (req, res) => {
-    const policyNumber = req.query.policyNumber;
+app.get('/view-claim', async (req, res) => {
+    const { searchType, searchValue } = req.query;
 
     try {
-        const claim = await Claim.findOne({ where: { policyNumber: policyNumber } });
-        res.render("viewclaims-page", { claim });
+        let query = {};
+
+        if (searchType === 'policyNumber') {
+            query.policyNumber = searchValue;
+        } else if (searchType === 'name') {
+            query.name = { $regex: new RegExp(searchValue, 'i') }; // case-insensitive
+        } else if (searchType === 'phone') {
+            query.phone = { $regex: new RegExp(searchValue, 'i') };
+        }
+
+        const claim = await ClaimCollection.findOne(query);
+
+        res.render('viewclaims-page', { claim });
     } catch (error) {
-        console.error("Error retrieving claim:", error);
-        res.status(500).send("An error occurred while retrieving the claim.");
+        console.error(error);
+        res.status(500).send('Server error occurred while searching for claim.');
     }
 });
 
