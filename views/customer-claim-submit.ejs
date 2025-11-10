@@ -17,7 +17,7 @@
 
     <!-- Claim Submission Form -->
     <main class="content">
-        <form id="customerClaimForm" class="claim-form">
+        <form id="customerClaimForm" class="claim-form" novalidate>
             <h1>Submit Your Claim</h1>
             <p class="form-intro">Please complete the form below to start your insurance claim process.</p>
 
@@ -28,12 +28,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="name">First Name</label>
+                    <label for="firstname">First Name</label>
                     <input type="text" id="firstname" name="firstname" placeholder="John" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="name">Last Name</label>
+                    <label for="lastname">Last Name</label>
                     <input type="text" id="lastname" name="lastname" placeholder="Doe" required>
                 </div>
 
@@ -78,20 +78,50 @@
         </div>
     </div>
 
-    <!-- JS -->
+    <!-- JavaScript -->
     <script>
         const claimForm = document.getElementById("customerClaimForm");
         const modal = document.getElementById("popupModal");
         const popupMessage = document.getElementById("popupMessage");
 
+        // ---- Custom Validation Messages ----
+        const customMessages = {
+            policyNumber: "Please enter your policy number.",
+            firstname: "Please enter your first name.",
+            lastname: "Please enter your last name.",
+            email: "Please enter a valid email address.",
+            phone: "Please enter your phone number.",
+            claimDate: "Please select the date of loss.",
+            location: "Please enter the location of loss.",
+            description: "Please describe what happened."
+        };
+
+        // Assign custom messages to all required inputs
+        for (const [id, message] of Object.entries(customMessages)) {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener("invalid", function () {
+                    this.setCustomValidity(message);
+                });
+                input.addEventListener("input", function () {
+                    this.setCustomValidity("");
+                });
+            }
+        }
+
+        // ---- Handle Form Submission ----
         claimForm.addEventListener("submit", async (e) => {
             e.preventDefault();
+
+            if (!claimForm.checkValidity()) {
+                claimForm.reportValidity();
+                return;
+            }
 
             const formData = new FormData(claimForm);
             const data = Object.fromEntries(formData.entries());
 
             try {
-                // In the future, this endpoint can connect to MongoDB or send email
                 const response = await fetch("/customer-claim-submit", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
