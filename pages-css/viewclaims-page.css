@@ -26,6 +26,14 @@ body {
     min-height: 100vh;
 }
 
+.search-select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
 /* Page Title */
 .page-title {
     text-align: center;
