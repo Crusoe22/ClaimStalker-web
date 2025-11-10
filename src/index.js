@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
-const { Claim, User, sequelize } = require("./config"); // Updated import for Sequelize models
+const { Claims, Users, sequelize } = require("./config"); // Updated import for Sequelize models
+const { Op } = require("sequelize"); //new line
 const bcrypt = require('bcryptjs');
 const nodemailer = require("nodemailer");
 
@@ -109,28 +110,33 @@ app.get("/viewclaims-page", (req, res) => {
 });
 
 // Search for a claim by policy number
+// Search for a claim by policy number, name, or phone (PostgreSQL via Sequelize)
 app.get('/view-claim', async (req, res) => {
-    const { searchType, searchValue } = req.query;
+    const { searchType, searchValue, policyNumber } = req.query;
 
     try {
-        let query = {};
+        let whereClause = {};
 
-        if (searchType === 'policyNumber') {
-            query.policyNumber = searchValue;
+        // Keep backward compatibility with your old form
+        if (policyNumber) {
+            whereClause.policyNumber = policyNumber;
+        } else if (searchType === 'policyNumber') {
+            whereClause.policyNumber = searchValue;
         } else if (searchType === 'name') {
-            query.name = { $regex: new RegExp(searchValue, 'i') }; // case-insensitive
+            whereClause.name = { [Op.iLike]: `%${searchValue}%` }; // case-insensitive partial match
         } else if (searchType === 'phone') {
-            query.phone = { $regex: new RegExp(searchValue, 'i') };
+            whereClause.phone = { [Op.iLike]: `%${searchValue}%` };
         }
 
-        const claim = await ClaimCollection.findOne(query);
+        const claim = await Claim.findOne({ where: whereClause });
 
         res.render('viewclaims-page', { claim });
     } catch (error) {
-        console.error(error);
+        console.error('Error retrieving claim:', error);
         res.status(500).send('Server error occurred while searching for claim.');
     }
 });
+
 
 // Route to handle sending email and submitting claim to database
 app.post("/submit-and-send-email", async (req, res) => {
