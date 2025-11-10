@@ -87,7 +87,7 @@ app.post("/signup", async (req, res) => {
     }
 });
 
-
+/*
 // Login user
 app.post("/login", async (req, res) => {
     try {
@@ -107,6 +107,25 @@ app.post("/login", async (req, res) => {
         res.status(500).send("An error occurred during login.");
     }
 });
+*/
+
+// Login user added new
+app.post("/login", async (req, res) => {
+    try {
+        const user = await User.findOne({ where: { username: req.body.username } });
+        if (!user) return res.send("Username not found.");
+
+        const isPasswordMatch = await bcrypt.compare(req.body.password, user.password);
+        if (!isPasswordMatch) return res.send("Incorrect password.");
+
+        // Redirect to the logged-in user's account page
+        res.redirect(`/account/${user.id}`);
+    } catch (error) {
+        console.error("Error logging in:", error);
+        res.status(500).send("An error occurred during login.");
+    }
+});
+
 
 // Render the viewclaims-page form
 app.get("/viewclaims-page", (req, res) => {
@@ -220,14 +239,21 @@ sequelize.sync().then(() => {
 });
 
 // Account page route
+// Account page route
 app.get("/account/:id", async (req, res) => {
   try {
+    // Fetch user by primary key
     const user = await User.findByPk(req.params.id);
-    if (!user) return res.status(404).send("User not found");
 
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    // Pass the user object to your EJS template
     res.render("account-page", { user });
   } catch (err) {
     console.error("Error fetching user data:", err);
     res.status(500).send("Server error");
   }
 });
+
