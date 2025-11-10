@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const { Claims, Users, sequelize } = require("./config"); // Updated import for Sequelize models
+const { Claim, User, sequelize } = require("./config"); // Updated import for Sequelize models
 const { Op } = require("sequelize"); //new line
 const bcrypt = require('bcryptjs');
 const nodemailer = require("nodemailer");
