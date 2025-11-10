@@ -4,6 +4,15 @@ const { Claim, User, sequelize } = require("./config"); // Updated import for Se
 const { Op } = require("sequelize"); //new line
 const bcrypt = require('bcryptjs');
 const nodemailer = require("nodemailer");
+const session = require('express-session');
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'secret-key', // set a strong secret in production
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 day
+}));
+
 
 const app = express();
 
@@ -118,13 +127,17 @@ app.post("/login", async (req, res) => {
         const isPasswordMatch = await bcrypt.compare(req.body.password, user.password);
         if (!isPasswordMatch) return res.send("Incorrect password.");
 
-        // Redirect to the logged-in user's account page
-        res.redirect(`/account/${user.id}`);
+        // Save user ID in session
+        req.session.userId = user.id;
+
+        // Redirect to homepage
+        res.redirect("/homepage");
     } catch (error) {
         console.error("Error logging in:", error);
         res.status(500).send("An error occurred during login.");
     }
 });
+
 
 
 // Render the viewclaims-page form
@@ -240,20 +253,36 @@ sequelize.sync().then(() => {
 
 // Account page route
 // Account page route
-app.get("/account/:id", async (req, res) => {
-  try {
-    // Fetch user by primary key
-    const user = await User.findByPk(req.params.id);
-
-    if (!user) {
-      return res.status(404).send("User not found");
+app.get("/account", async (req, res) => {
+    if (!req.session.userId) {
+        return res.redirect("/login");
     }
 
-    // Pass the user object to your EJS template
-    res.render("account-page", { user });
-  } catch (err) {
-    console.error("Error fetching user data:", err);
-    res.status(500).send("Server error");
-  }
+    try {
+        const user = await User.findByPk(req.session.userId);
+        if (!user) return res.redirect("/login");
+
+        res.render("account-page", { user });
+    } catch (err) {
+        console.error("Error fetching user data:", err);
+        res.status(500).send("Server error");
+    }
 });
 
+
+// Home page
+app.get("/homepage", async (req, res) => {
+    if (!req.session.userId) {
+        return res.redirect("/login"); // redirect if not logged in
+    }
+
+    try {
+        const user = await User.findByPk(req.session.userId);
+        if (!user) return res.redirect("/login");
+
+        res.render("homepage", { user }); // pass user to EJS
+    } catch (err) {
+        console.error("Error fetching user for homepage:", err);
+        res.status(500).send("Server error");
+    }
+});
