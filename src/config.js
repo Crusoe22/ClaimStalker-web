@@ -35,6 +35,7 @@ const User = sequelize.define('User', {
 
 // Define User model
 const User = sequelize.define('User', {
+    name: { type: DataTypes.STRING, allowNull: false, unique: true },
     username: { type: DataTypes.STRING, allowNull: false, unique: true },
     email: { type: DataTypes.STRING, allowNull: false, unique: true },
     phone: { type: DataTypes.STRING },
