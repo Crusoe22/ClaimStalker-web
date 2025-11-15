@@ -253,3 +253,18 @@ body {
 .claim-table tr:nth-child(even) {
     background-color: #fafafa;
 }
+
+.export-button {
+    display: inline-block;
+    margin-bottom: 15px;
+    padding: 10px 16px;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.export-button:hover {
+    background-color: #43a047;
+}

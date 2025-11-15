@@ -44,6 +44,14 @@
         <% if (claims && claims.length > 0) { %>
             <div class="table-container">
                 <h2 class="section-title">Claim Results</h2>
+                <!-- Export to Excel button-->
+                            <a 
+                href="/export-claims?<%= new URLSearchParams({ searchType, searchValue }).toString() %>" 
+                class="export-button"
+            >
+                Export to Excel
+            </a>
+
 
                 <table class="claim-table">
                     <thead>

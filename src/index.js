@@ -144,8 +144,13 @@ app.post("/login", async (req, res) => {
 
 // Render the viewclaims-page form
 app.get("/viewclaims-page", (req, res) => {
-    res.render("viewclaims-page", { claim: null });
+    res.render("viewclaims-page", { 
+        claims: [], 
+        searchType: null, 
+        searchValue: null 
+    });
 });
+
 
 // Search for a claim by policy number
 // Search for a claim by policy number, name, or phone (PostgreSQL via Sequelize)
@@ -174,6 +179,80 @@ app.get('/view-claim', async (req, res) => {
         res.status(500).send('Server error occurred while searching for claim.');
     }
 });
+
+
+// Export claims to Excel
+app.get("/export-claims", async (req, res) => {
+    const { searchType, searchValue } = req.query;
+
+    try {
+        let whereClause = {};
+
+        if (searchType === "policyNumber") {
+            whereClause.policyNumber = searchValue;
+        } else if (searchType === "name") {
+            whereClause.name = { [Op.iLike]: `%${searchValue}%` };
+        } else if (searchType === "phone") {
+            whereClause.phone = { [Op.iLike]: `%${searchValue}%` };
+        }
+
+        const claims = await Claim.findAll({ where: whereClause });
+
+        // Build Excel
+        const Excel = require("exceljs");
+        const workbook = new Excel.Workbook();
+        const sheet = workbook.addWorksheet("Claims");
+
+        // Header row
+        sheet.addRow([
+            "Policy Number",
+            "Name",
+            "Email",
+            "Phone",
+            "Insurance Company",
+            "Date of Loss",
+            "Location",
+            "Auto Loss",
+            "Property Loss",
+            "Description"
+        ]);
+
+        // Data rows
+        claims.forEach(claim => {
+            sheet.addRow([
+                claim.policyNumber,
+                claim.name,
+                claim.email,
+                claim.phone,
+                claim.insuranceCompany,
+                claim.claimDate ? claim.claimDate.toDateString() : "",
+                claim.location,
+                claim.autoLoss ? "Yes" : "No",
+                claim.propertyLoss ? "Yes" : "No",
+                claim.description
+            ]);
+        });
+
+        // Send the file to the browser
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+        res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=claims_export.xlsx"
+        );
+
+        await workbook.xlsx.write(res);
+        res.end();
+
+    } catch (err) {
+        console.error("Excel export error:", err);
+        res.status(500).send("Error exporting claims.");
+    }
+});
+
+
 
 
 // Route to handle sending email and submitting claim to database
