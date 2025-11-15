@@ -152,7 +152,6 @@ app.get("/viewclaims-page", (req, res) => {
 });
 
 
-// Search for a claim by policy number
 // Search for a claim by policy number, name, or phone (PostgreSQL via Sequelize)
 app.get('/view-claim', async (req, res) => {
     const { searchType, searchValue, policyNumber } = req.query;
@@ -166,19 +165,25 @@ app.get('/view-claim', async (req, res) => {
         } else if (searchType === 'policyNumber') {
             whereClause.policyNumber = searchValue;
         } else if (searchType === 'name') {
-            whereClause.name = { [Op.iLike]: `%${searchValue}%` }; // case-insensitive partial match
+            whereClause.name = { [Op.iLike]: `%${searchValue}%` };
         } else if (searchType === 'phone') {
             whereClause.phone = { [Op.iLike]: `%${searchValue}%` };
         }
 
         const claims = await Claim.findAll({ where: whereClause });
 
-        res.render('viewclaims-page', { claims });
+        res.render('viewclaims-page', { 
+            claims,
+            searchType,
+            searchValue
+        });
+
     } catch (error) {
         console.error('Error retrieving claim:', error);
         res.status(500).send('Server error occurred while searching for claim.');
     }
 });
+
 
 
 // Export claims to Excel
