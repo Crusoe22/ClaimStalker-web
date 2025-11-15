@@ -19,10 +19,11 @@
         <div class="search-container">
             <form action="/view-claim" method="GET" class="search-form">
                 <label for="searchType" class="search-label">Search By:</label>
+
                 <select id="searchType" name="searchType" class="search-select">
-                    <option value="policyNumber">Policy Number</option>
-                    <option value="name">Name</option>
-                    <option value="phone">Phone Number</option>
+                    <option value="policyNumber" <%= searchType === "policyNumber" ? "selected" : "" %>>Policy Number</option>
+                    <option value="name" <%= searchType === "name" ? "selected" : "" %>>Name</option>
+                    <option value="phone" <%= searchType === "phone" ? "selected" : "" %>>Phone Number</option>
                 </select>
 
                 <input 
@@ -30,6 +31,7 @@
                     id="searchValue" 
                     name="searchValue" 
                     required 
+                    value="<%= searchValue || '' %>"
                     placeholder="Enter your search value..." 
                     class="search-input"
                 >
@@ -44,14 +46,14 @@
         <% if (claims && claims.length > 0) { %>
             <div class="table-container">
                 <h2 class="section-title">Claim Results</h2>
-                <!-- Export to Excel button-->
-                            <a 
-                href="/export-claims?<%= new URLSearchParams({ searchType, searchValue }).toString() %>" 
-                class="export-button"
-            >
-                Export to Excel
-            </a>
 
+                <!-- Export to Excel button -->
+                <a 
+                    href="/export-claims?<%= new URLSearchParams({ searchType, searchValue }).toString() %>" 
+                    class="export-button"
+                >
+                    Export to Excel
+                </a>
 
                 <table class="claim-table">
                     <thead>
@@ -88,7 +90,7 @@
                 </table>
             </div>
 
-        <% } else if (typeof claims !== "undefined") { %>
+        <% } else if (claims && claims.length === 0 && searchType) { %>
             <div class="no-results-message">
                 <i class="fas fa-exclamation-triangle"></i>
                 <p>No claims were found for your search. Please try again.</p>
