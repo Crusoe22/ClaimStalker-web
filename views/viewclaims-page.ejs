@@ -40,48 +40,50 @@
             </form>
         </div>
 
-        <!-- Claim Results -->
+        <!-- Claim Results: Excel-Style Table -->
+        <% if (claims && claims.length > 0) { %>
+            <div class="table-container">
+                <h2 class="section-title">Claim Results</h2>
 
-        <% if (claim) { %>
-            <div class="claim-details-container">
-                <h2 class="section-title">Claim Details for Policy #<%= claim.policyNumber %></h2>
-                <div class="claim-info-grid">
-                    <div class="info-card">
-                        <i class="fas fa-user-circle info-icon"></i>
-                        <h3 class="info-label">Contact Information</h3>
-                        <p><strong>Name:</strong> <%= claim.name %></p>
-                        <p><strong>Email:</strong> <%= claim.email %></p>
-                        <p><strong>Phone:</strong> <%= claim.phone %></p>
-                    </div>
-                    <div class="info-card">
-                        <i class="fas fa-building info-icon"></i>
-                        <h3 class="info-label">Policy & Company</h3>
-                        <p><strong>Policy Number:</strong> <%= claim.policyNumber %></p>
-                        <p><strong>Insurance Company:</strong> <%= claim.insuranceCompany %></p>
-                    </div>
-                    <div class="info-card">
-                        <i class="fas fa-calendar-alt info-icon"></i>
-                        <h3 class="info-label">Loss Information</h3>
-                        <p><strong>Date of Loss:</strong> <%= claim.claimDate.toDateString() %></p>
-                        <p><strong>Location:</strong> <%= claim.location %></p>
-                        <% if (claim.autoLoss) { %>
-                            <p><strong>Auto Loss:</strong> Yes</p>
-                        <% } %>
-                        <% if (claim.propertyLoss) { %>
-                            <p><strong>Property Loss:</strong> Yes</p>
-                        <% } %>
-                    </div>
-                    <div class="info-card full-width-card">
-                        <i class="fas fa-info-circle info-icon"></i>
-                        <h3 class="info-label">Description of Loss</h3>
-                        <p><%= claim.description %></p>
-                    </div>
-                </div>
+                <table class="claim-table">
+                    <thead>
+                        <tr>
+                            <th>Policy #</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Insurance Company</th>
+                            <th>Date of Loss</th>
+                            <th>Location</th>
+                            <th>Auto Loss</th>
+                            <th>Property Loss</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% claims.forEach(claim => { %>
+                            <tr>
+                                <td><%= claim.policyNumber %></td>
+                                <td><%= claim.name %></td>
+                                <td><%= claim.email %></td>
+                                <td><%= claim.phone %></td>
+                                <td><%= claim.insuranceCompany %></td>
+                                <td><%= claim.claimDate ? claim.claimDate.toDateString() : '' %></td>
+                                <td><%= claim.location %></td>
+                                <td><%= claim.autoLoss ? "Yes" : "No" %></td>
+                                <td><%= claim.propertyLoss ? "Yes" : "No" %></td>
+                                <td><%= claim.description %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
             </div>
-        <% } else if (typeof claim !== 'undefined') { %>
+
+        <% } else if (typeof claims !== "undefined") { %>
             <div class="no-results-message">
                 <i class="fas fa-exclamation-triangle"></i>
-                <p>No claim was found with that policy number. Please double-check the number and try again.</p>
+                <p>No claims were found for your search. Please try again.</p>
             </div>
         <% } %>
     </main>

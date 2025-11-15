@@ -166,9 +166,9 @@ app.get('/view-claim', async (req, res) => {
             whereClause.phone = { [Op.iLike]: `%${searchValue}%` };
         }
 
-        const claim = await Claim.findOne({ where: whereClause });
+        const claims = await Claim.findAll({ where: whereClause });
 
-        res.render('viewclaims-page', { claim });
+        res.render('viewclaims-page', { claims });
     } catch (error) {
         console.error('Error retrieving claim:', error);
         res.status(500).send('Server error occurred while searching for claim.');
