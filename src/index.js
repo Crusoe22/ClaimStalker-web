@@ -19,6 +19,9 @@ app.use(session({
 }));
 
 
+const flash = require('connect-flash');
+app.use(flash());
+
 // CRITICAL: Parse form data
 app.use(express.urlencoded({ extended: true }));  // ← ADD THIS
 
