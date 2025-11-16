@@ -77,7 +77,7 @@ app.get("/email-page", (req, res) => {
     res.render("index");
 });
 // Customer manager page route
-app.get("/customers/manager", (req, res) => {
+app.get("/customers-manager", (req, res) => {
     res.render("customer-manager");
 });
 
