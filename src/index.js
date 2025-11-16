@@ -6,6 +6,9 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require("nodemailer");
 const session = require('express-session');
 
+const { body, validationResult } = require('express-validator');
+const bcrypt = require('bcrypt');
+
 const app = express();
 
 app.use(session({
@@ -68,6 +71,7 @@ app.get("/email-page", (req, res) => {
     res.render("index");
 });
 
+/*
 // Register User
 app.post("/signup", async (req, res) => {
     const data = {
@@ -97,6 +101,104 @@ app.post("/signup", async (req, res) => {
         res.status(500).send("An error occurred during registration.");
     }
 });
+*/
+// ---------------------------------------------------
+// POST /signup – Register a new user
+// ---------------------------------------------------
+app.post(
+  "/signup",
+  [
+    // ---- Validation Chain ----
+    body('username')
+      .trim()
+      .notEmpty().withMessage('Username is required.')
+      .isLength({ min: 3 }).withMessage('Username must be at least 3 characters.'),
+    
+    body('name')
+      .trim()
+      .notEmpty().withMessage('Full name is required.'),
+
+    body('email')
+      .trim()
+      .isEmail().withMessage('Please enter a valid email.')
+      .normalizeEmail(),
+
+    body('phone')
+      .trim()
+      .matches(/^\d{3}-\d{3}-\d{4}$/).withMessage('Phone must be in format 555-123-4567.'),
+
+    body('password')
+      .isLength({ min: 8 }).withMessage('Password must be at least 8 characters.')
+      .matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])/)
+      .withMessage('Password must contain uppercase, lowercase, number, and special character (@$!%*?&).'),
+
+    body('confirm_password')
+      .custom((value, { req }) => value === req.body.password)
+      .withMessage('Passwords do not match.')
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      // Extract only the first error per field for cleaner display
+      const errorMap = {};
+      errors.array().forEach(err => {
+        if (!errorMap[err.param]) errorMap[err.param] = err.msg;
+      });
+
+      return res.render('signup', {
+        error: Object.values(errorMap).join(' '),
+        old: req.body
+      });
+    }
+
+    // ---- Build clean data object ----
+    const data = {
+      username: req.body.username.trim(),
+      name: req.body.name.trim() || req.body.username.trim(),
+      email: req.body.email.trim(),
+      phone: req.body.phone.trim(),
+      password: req.body.password
+    };
+
+    // ---- Check for existing username ----
+    const existingUser = await User.findOne({ where: { username: data.username } });
+    if (existingUser) {
+      return res.render('signup', {
+        error: 'Username already taken. Please choose another.',
+        old: req.body
+      });
+    }
+
+    // ---- Hash password ----
+    const saltRounds = 10;
+    data.password = await bcrypt.hash(data.password, saltRounds);
+
+    // ---- Create user ----
+    try {
+      const newUser = await User.create(data);
+      console.log("New user created:", newUser.username);
+
+      // Success: redirect with flash-style message (or just redirect)
+      req.flash?.('success', 'Registration successful! Please log in.');
+      return res.redirect('/login');
+    } catch (error) {
+      console.error("Error registering user:", error);
+
+      // Handle DB validation errors (e.g. unique email)
+      if (error.name === 'SequelizeUniqueConstraintError') {
+        return res.render('signup', {
+          error: 'Email or username already in use.',
+          old: req.body
+        });
+      }
+
+      return res.render('signup', {
+        error: 'An unexpected error occurred. Please try again.',
+        old: req.body
+      });
+    }
+  }
+);
 
 /*
 // Login user

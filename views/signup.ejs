@@ -33,9 +33,23 @@
                     <input type="tel" id="phone" name="phone" placeholder="Phone Number (e.g. 555-123-4567)" required autocomplete="off">
                 </div>
 
-                <!-- Password -->
+               <!-- Password -->
                 <div class="input-field">
-                    <input type="password" id="password" name="password" placeholder="Create a Password" required>
+                    <input type="password" id="password" name="password" placeholder="Create a Password"
+                           required
+                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
+                           title="Password must be 8+ characters, contain uppercase, lowercase, number, and one of @$!%*?&">
+                    <small class="hint">
+                        8+ chars • Uppercase • Lowercase • Number • Special (@$!%*?&)
+                    </small>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="input-field">
+                    <input type="password" id="confirm_password" placeholder="Confirm Password" required>
+                    <small id="password-match-error" class="error" style="display:none;">
+                        Passwords do not match.
+                    </small>
                 </div>
 
                 <!-- Submit -->
@@ -47,5 +61,31 @@
             </form>
         </div>
     </div>
+    <!-- Client-side validation -->
+    <script>
+        const pwd          = document.getElementById('password');
+        const confirmPwd   = document.getElementById('confirm_password');
+        const matchError   = document.getElementById('password-match-error');
+        const form         = document.querySelector('form');
+
+        // Real-time match check
+        confirmPwd.addEventListener('input', () => {
+            if (pwd.value !== confirmPwd.value) {
+                matchError.style.display = 'block';
+                confirmPwd.setCustomValidity('Passwords do not match');
+            } else {
+                matchError.style.display = 'none';
+                confirmPwd.setCustomValidity('');
+            }
+        });
+
+        // Final submit guard (in case someone disables JS)
+        form.addEventListener('submit', (e) => {
+            if (pwd.value !== confirmPwd.value) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+            }
+        });
+    </script>
 </body>
 </html>
