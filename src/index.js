@@ -129,8 +129,9 @@ app.post(
       .normalizeEmail(),
 
     body('phone')
-      .trim()
-      .matches(/^\d{3}-\d{3}-\d{4}$/).withMessage('Phone must be in format 555-123-4567.'),
+    .trim()
+    .matches(/^\(\d{3}\)\d{3}-\d{4}$/)
+    .withMessage('Phone must be in format (555)123-4567.');
 
     body('password')
       .isLength({ min: 8 }).withMessage('Password must be at least 8 characters.')

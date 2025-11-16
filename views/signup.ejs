@@ -30,7 +30,7 @@
 
                 <!-- Phone -->
                 <div class="input-field">
-                    <input type="tel" id="phone" name="phone" placeholder="Phone Number (e.g. 555-123-4567)" required autocomplete="off">
+                    <input type="tel" id="phone" name="phone" placeholder="Phone Number (e.g. (555)123-4567)" required autocomplete="off">
                 </div>
 
                <!-- Password -->
@@ -92,6 +92,36 @@
                 alert('Passwords do not match!');
             }
         });
+
+            // --- Phone number formatting ---
+    phoneInput.addEventListener('input', formatPhone);
+    phoneInput.addEventListener('keydown', handleBackspace);
+
+    function formatPhone(e) {
+        let input = e.target.value.replace(/\D/g, ''); // remove non-digits
+        if (input.length > 10) input = input.slice(0, 10);
+
+        let formatted = '';
+        if (input.length > 0) formatted += '(' + input.substring(0, 3);
+        if (input.length >= 4) formatted += ')' + input.substring(3, 6);
+        if (input.length >= 7) formatted += '-' + input.substring(6, 10);
+
+        e.target.value = formatted;
+    }
+
+    function handleBackspace(e) {
+        if (e.key === 'Backspace') {
+            const input = e.target.value;
+            const cursorPos = e.target.selectionStart;
+
+            // Prevent deleting formatting characters
+            if (cursorPos > 0 && (input[cursorPos - 1] === '(' || input[cursorPos - 1] === ')' || input[cursorPos - 1] === '-')) {
+                e.preventDefault();
+                const newPos = cursorPos - 1;
+                e.target.setSelectionRange(newPos, newPos);
+            }
+        }
+    }
     </script>
 </body>
 </html>
