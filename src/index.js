@@ -184,7 +184,7 @@ app.post(
       console.log("New user created:", newUser.username);
 
       // Success: redirect with flash-style message (or just redirect)
-      req.flash?.('success', 'Registration successful! Please log in.');
+      req.flash('success', 'Registration successful! Please log in.');
       return res.redirect('/login');
     } catch (error) {
       console.error("Error registering user:", error);
