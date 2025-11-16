@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));  // ← ADD THIS
 
 // Convert data to JSON format
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+//app.use(express.urlencoded({ extended: false }));
 
 // Static files
 app.use(express.static("public"));
