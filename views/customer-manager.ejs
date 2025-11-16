@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Manager | ClaimStalker</title>
+    <link rel="stylesheet" href="/page-css/customer-manager.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Customer Manager</h1>
+
+        <!-- Search Existing Customer -->
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="Search by Customer ID or Last Name">
+            <button onclick="searchCustomer()">Search</button>
+        </div>
+
+        <div id="searchResults"></div>
+
+        <hr>
+
+        <!-- Customer Form -->
+        <form id="customerForm">
+            <h2 id="formTitle">Create New Customer</h2>
+
+            <input type="hidden" id="customer_id">
+
+            <label>Agency ID</label>
+            <input type="number" id="agency_id" required>
+
+            <label>First Name</label>
+            <input type="text" id="first_name" required>
+
+            <label>Last Name</label>
+            <input type="text" id="last_name" required>
+
+            <label>Phone Number</label>
+            <input type="text" id="phone_number">
+
+            <label>Email</label>
+            <input type="email" id="email">
+
+            <label>Address Line 1</label>
+            <input type="text" id="address_line1" required>
+
+            <label>Address Line 2</label>
+            <input type="text" id="address_line2">
+
+            <label>City</label>
+            <input type="text" id="city" required>
+
+            <label>State</label>
+            <input type="text" id="state" required>
+
+            <label>Zip Code</label>
+            <input type="text" id="zip_code" required>
+
+            <button type="button" onclick="submitCustomer()">Submit</button>
+            <button type="button" class="clear-btn" onclick="clearForm()">Clear</button>
+        </form>
+    </div>
+
+<script>
+    // Load a customer for editing
+    function searchCustomer() {
+        const searchValue = document.getElementById('searchInput').value.trim();
+
+        fetch(`/customers/search?query=${searchValue}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.customer) {
+                    const c = data.customer;
+
+                    document.getElementById("customer_id").value = c.customer_id;
+                    document.getElementById("agency_id").value = c.agency_id;
+                    document.getElementById("first_name").value = c.first_name;
+                    document.getElementById("last_name").value = c.last_name;
+                    document.getElementById("phone_number").value = c.phone_number || "";
+                    document.getElementById("email").value = c.email || "";
+                    document.getElementById("address_line1").value = c.address_line1;
+                    document.getElementById("address_line2").value = c.address_line2 || "";
+                    document.getElementById("city").value = c.city;
+                    document.getElementById("state").value = c.state;
+                    document.getElementById("zip_code").value = c.zip_code;
+
+                    document.getElementById("formTitle").innerText = "Update Customer";
+                } else {
+                    document.getElementById("searchResults").innerHTML =
+                        "<p>No customer found.</p>";
+                }
+            });
+    }
+
+    // Create or update customer
+    function submitCustomer() {
+        const payload = {
+            customer_id: document.getElementById("customer_id").value || null,
+            agency_id: document.getElementById("agency_id").value,
+            first_name: document.getElementById("first_name").value,
+            last_name: document.getElementById("last_name").value,
+            phone_number: document.getElementById("phone_number").value,
+            email: document.getElementById("email").value,
+            address_line1: document.getElementById("address_line1").value,
+            address_line2: document.getElementById("address_line2").value,
+            city: document.getElementById("city").value,
+            state: document.getElementById("state").value,
+            zip_code: document.getElementById("zip_code").value
+        };
+
+        fetch("/customers/save", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                if (data.success) clearForm();
+            });
+    }
+
+    // Clear form
+    function clearForm() {
+        document.getElementById("customerForm").reset();
+        document.getElementById("customer_id").value = "";
+        document.getElementById("formTitle").innerText = "Create New Customer";
+    }
+</script>
+
+</body>
+</html>

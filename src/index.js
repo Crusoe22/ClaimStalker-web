@@ -75,6 +75,11 @@ app.get("/customer-claim-submit", (req, res) => {
 app.get("/email-page", (req, res) => {
     res.render("index");
 });
+// Customer manager page route
+app.get("/customers/manager", (req, res) => {
+    res.render("customer-manager");
+});
+
 
 /*
 // Register User
@@ -478,5 +483,54 @@ app.get("/homepage", async (req, res) => {
     } catch (err) {
         console.error("Error fetching user for homepage:", err);
         res.status(500).send("Server error");
+    }
+});
+
+// Customer search route for customer manager
+app.get("/customers/search", async (req, res) => {
+    const { query } = req.query;
+
+    try {
+        const customer = await Customers.findOne({
+            where: {
+                [Op.or]: [
+                    { customer_id: query },
+                    { last_name: { [Op.iLike]: `%${query}%` } }
+                ]
+            }
+        });
+
+        if (!customer) {
+            return res.json({ success: false });
+        }
+
+        res.json({ success: true, customer });
+    } catch (err) {
+        res.json({ success: false, error: err.message });
+    }
+});
+
+// Customer save (create/update) route for customer manager
+app.post("/customers/save", async (req, res) => {
+    const data = req.body;
+
+    try {
+        let customer;
+
+        if (data.customer_id) {
+            // Update existing
+            customer = await Customers.update(data, {
+                where: { customer_id: data.customer_id }
+            });
+
+            return res.json({ success: true, message: "Customer updated successfully." });
+        } else {
+            // Create new
+            customer = await Customers.create(data);
+            return res.json({ success: true, message: "Customer created successfully." });
+        }
+
+    } catch (err) {
+        return res.json({ success: false, message: err.message });
     }
 });
