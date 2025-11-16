@@ -19,6 +19,8 @@ app.use(session({
 }));
 
 
+// CRITICAL: Parse form data
+app.use(express.urlencoded({ extended: true }));  // ← ADD THIS
 
 // Convert data to JSON format
 app.use(express.json());
