@@ -59,6 +59,17 @@ app.post("/customer-claim-submit-public", async (req, res, next) => {
     next();
 });
 
+
+app.get("/login", (req, res) => {
+    res.render("login");
+});
+
+app.get("/signup", (req, res) => {
+    res.render("signup");
+});
+
+
+
 // Login protection middleware
 function checkLogin(req, res, next) {
     if (!req.session.userId) {
@@ -85,17 +96,12 @@ app.get('/registerlogin-page', (req, res) => {
 });*/
 
 
+
+
 app.get('/homepage', (req, res) => {
     res.render('homepage');
 });
 
-app.get("/login", (req, res) => {
-    res.render("login");
-});
-
-app.get("/signup", (req, res) => {
-    res.render("signup");
-});
 
 app.get("/customer-claim-submit", (req, res) => {
     res.render("customer-claim-submit");
