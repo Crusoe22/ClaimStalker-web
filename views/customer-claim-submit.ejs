@@ -122,7 +122,7 @@
             const data = Object.fromEntries(formData.entries());
 
             try {
-                const response = await fetch("/customer-claim-submit", {
+                const response = await fetch("/submit-and-send-email", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(data)
