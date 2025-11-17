@@ -42,6 +42,35 @@ app.get("/", (req, res) => {
     res.render("main");
 });
 
+
+// ---------------------------------------------
+// PUBLIC CUSTOMER CLAIM SUBMISSION PAGE
+// ---------------------------------------------
+app.get("/customer-claim-submit-public", (req, res) => {
+    res.render("customer-claim-submit");
+});
+
+// ---------------------------------------------
+// PUBLIC CLAIM SUBMISSION FORM HANDLER
+// (reuses your existing submit-and-send-email logic)
+// ---------------------------------------------
+app.post("/customer-claim-submit-public", async (req, res, next) => {
+    req.url = "/submit-and-send-email";  // forward to existing logic
+    next();
+});
+
+// Login protection middleware
+function checkLogin(req, res, next) {
+    if (!req.session.userId) {
+        return res.redirect("/login");
+    }
+    next();
+}
+
+// Protect internal pages
+app.use(checkLogin);
+
+
 app.get('/account-page', (req, res) => {
     res.render('account-page');
 });
@@ -72,21 +101,7 @@ app.get("/customer-claim-submit", (req, res) => {
     res.render("customer-claim-submit");
 });
 
-// ---------------------------------------------
-// PUBLIC CUSTOMER CLAIM SUBMISSION PAGE
-// ---------------------------------------------
-app.get("/customer-claim-submit-public", (req, res) => {
-    res.render("customer-claim-submit");
-});
 
-// ---------------------------------------------
-// PUBLIC CLAIM SUBMISSION FORM HANDLER
-// (reuses your existing submit-and-send-email logic)
-// ---------------------------------------------
-app.post("/customer-claim-submit-public", async (req, res, next) => {
-    req.url = "/submit-and-send-email";  // forward to existing logic
-    next();
-});
 
 
 
