@@ -72,6 +72,25 @@ app.get("/customer-claim-submit", (req, res) => {
     res.render("customer-claim-submit");
 });
 
+// ---------------------------------------------
+// PUBLIC CUSTOMER CLAIM SUBMISSION PAGE
+// ---------------------------------------------
+app.get("/customer-claim-submit-public", (req, res) => {
+    res.render("customer-claim-submit");
+});
+
+// ---------------------------------------------
+// PUBLIC CLAIM SUBMISSION FORM HANDLER
+// (reuses your existing submit-and-send-email logic)
+// ---------------------------------------------
+app.post("/customer-claim-submit-public", async (req, res, next) => {
+    req.url = "/submit-and-send-email";  // forward to existing logic
+    next();
+});
+
+
+
+
 // Email page route
 app.get("/email-page", (req, res) => {
     res.render("index");
