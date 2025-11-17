@@ -41,7 +41,9 @@ app.set("view engine", "ejs");
 app.get("/", (req, res) => {
     res.render("main");
 });
-
+app.get("/customer-claim-submit", (req, res) => {
+    res.render("customer-claim-submit");
+});
 
 // ---------------------------------------------
 // PUBLIC CUSTOMER CLAIM SUBMISSION PAGE
@@ -78,7 +80,9 @@ function checkLogin(req, res, next) {
     next();
 }
 
-// Protect internal pages
+// ----------------------------------------------------------
+// PROTECTED ROUTES - EVERYTHING BELOW REQUIRES LOGIN
+// ----------------------------------------------------------
 app.use(checkLogin);
 
 
@@ -96,20 +100,9 @@ app.get('/registerlogin-page', (req, res) => {
 });*/
 
 
-
-
 app.get('/homepage', (req, res) => {
     res.render('homepage');
 });
-
-
-app.get("/customer-claim-submit", (req, res) => {
-    res.render("customer-claim-submit");
-});
-
-
-
-
 
 
 // Email page route
