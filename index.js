@@ -9,11 +9,6 @@ const session = require("express-session");
 const { body, validationResult } = require("express-validator");
 
 
-// Customer model
-const Customer = sequelize.define('customer', {
-  contact_email: { type: DataTypes.STRING },
-  contact_person: { type: DataTypes.STRING }
-}, { tableName: 'customers', timestamps: false });
 
 // Nodemailer transporter (reuse your /submit-and-send-email config)
 const transporter = nodemailer.createTransport({
@@ -362,21 +357,21 @@ app.post("/customers/save", async (req, res) => {
 // Endpoint to send email to all customers
 app.post('/send-customer-claim-submit', async (req, res) => {
   try {
-    const customers = await Customer.findAll();
+    // Fetch all customers
+    const customers = await Customers.findAll();
 
     if (!customers.length) {
       return res.json({ message: 'No customers found to send emails.' });
     }
 
-    for (const customer of customers) {
-      const name = customer.contact_person || 'Customer';
-      const email = customer.contact_email;
+    // Send emails in parallel for speed
+    await Promise.all(customers.map(async (customer) => {
+      if (!customer.email) return; // skip if no email
 
-      if (!email) continue;
-
+      const name = `${customer.first_name || ''} ${customer.last_name || ''}`.trim() || 'Customer';
       const mailOptions = {
         from: '"CLAIM STALKER" <noreply@claimstalker.com>',
-        to: email,
+        to: customer.email,
         subject: 'Submit Your Insurance Claim',
         text: `Hello ${name},\n\nPlease click the link below to submit your claim:\n${process.env.CLAIM_SUBMIT_URL}`,
         html: `
@@ -389,11 +384,11 @@ app.post('/send-customer-claim-submit', async (req, res) => {
 
       try {
         const info = await transporter.sendMail(mailOptions);
-        console.log(`Email sent to ${email}:`, info.response);
+        console.log(`Email sent to ${customer.email}: ${info.response}`);
       } catch (err) {
-        console.error(`Failed to send email to ${email}:`, err);
+        console.error(`Failed to send email to ${customer.email}:`, err);
       }
-    }
+    }));
 
     res.json({ message: `Emails sent (or attempted) to ${customers.length} customers.` });
   } catch (err) {
@@ -401,6 +396,7 @@ app.post('/send-customer-claim-submit', async (req, res) => {
     res.status(500).json({ message: 'Server error while sending emails.' });
   }
 });
+
 
 // Serve EJS page
 app.set('view engine', 'ejs');
