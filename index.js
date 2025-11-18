@@ -320,6 +320,7 @@ app.get("/export-claims", async (req, res) => {
   }
 });
 
+/*
 // Customers API (protected)
 app.get("/customers/search", async (req, res) => {
   const { query } = req.query;
@@ -338,6 +339,39 @@ app.get("/customers/search", async (req, res) => {
     res.json({ success: false, error: err.message });
   }
 });
+*/
+
+// Search multiple customers (ID, last name, or email)
+app.get("/customers/search-multiple", async (req, res) => {
+    try {
+        const { query } = req.query;
+
+        if (!query) {
+            return res.json({ success: true, customers: [] });
+        }
+
+        const customers = await Customers.findAll({
+            where: {
+                [Op.or]: [
+                    { customer_id: query },
+                    { last_name: { [Op.iLike]: `%${query}%` } },
+                    { email: { [Op.iLike]: `%${query}%` } }
+                ]
+            },
+            order: [["customer_id", "ASC"]]
+        });
+
+        return res.json({
+            success: true,
+            customers
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.json({ success: false, error: "Search failed" });
+    }
+});
+
 
 app.post("/customers/save", async (req, res) => {
   const data = req.body;

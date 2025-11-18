@@ -1,3 +1,6 @@
+/* ===============================
+   Global Styles
+=============================== */
 body {
     font-family: Arial, sans-serif;
     background: #f5f7fa;
@@ -5,7 +8,7 @@ body {
 }
 
 .container {
-    max-width: 700px;
+    max-width: 900px;
     background: white;
     padding: 25px;
     margin: auto;
@@ -13,13 +16,122 @@ body {
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-h1, h2 {
+h1 {
     text-align: center;
+    margin-bottom: 25px;
 }
 
+h2 {
+    margin-bottom: 10px;
+}
+
+
+/* ===============================
+   Mode Switch Buttons
+=============================== */
+.mode-switch {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.mode-switch button {
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: #d1d5db;
+    color: #111;
+    transition: 0.2s;
+}
+
+.mode-switch button:hover {
+    background: #bfc4cc;
+}
+
+.mode-switch button.active {
+    background: #2563eb;
+    color: white;
+}
+
+
+/* ===============================
+   Search Section
+=============================== */
+.hidden {
+    display: none !important;
+}
+
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.search-bar button {
+    padding: 10px 15px;
+    background: #2563eb;
+    border-radius: 6px;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.search-bar button:hover {
+    background: #1e4fc1;
+}
+
+#noResults {
+    color: #555;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+
+/* ===============================
+   Excel-like Table
+=============================== */
+.excel-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    border: 1px solid #ccc;
+}
+
+.excel-table th,
+.excel-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.excel-table th {
+    background: #e5e7eb;
+    font-weight: bold;
+    text-align: left;
+}
+
+.excel-table tr:hover {
+    background-color: #eef2ff;
+    cursor: pointer;
+}
+
+
+/* ===============================
+   Customer Form
+=============================== */
 label {
     font-weight: bold;
-    margin-top: 10px;
+    margin-top: 12px;
     display: block;
 }
 
@@ -29,7 +141,7 @@ input {
     margin-top: 3px;
     border-radius: 6px;
     border: 1px solid #ccc;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 button {
@@ -50,19 +162,16 @@ button:hover {
     background: #6b7280;
 }
 
-.search-section {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+.clear-btn:hover {
+    background: #575d67;
 }
 
-#searchResults {
-    margin-top: 10px;
-    font-size: 14px;
-    color: #333;
-}
-/* Error message styling */
+
+/* ===============================
+   Error Messages
+=============================== */
 .error-messages {
     color: red;
     margin-bottom: 15px;
+    font-size: 14px;
 }
