@@ -9,12 +9,6 @@ const session = require("express-session");
 const { body, validationResult } = require("express-validator");
 
 
-// PostgreSQL connection (Sequelize)
-const sequelize = new Sequelize(process.env.POSTGRES_URI, {
-  dialect: 'postgres',
-  logging: false,
-});
-
 // Customer model
 const Customer = sequelize.define('customer', {
   contact_email: { type: DataTypes.STRING },
