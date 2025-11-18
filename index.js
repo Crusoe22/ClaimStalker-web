@@ -1,570 +1,342 @@
+// index.js — cleaned and organized version
 const express = require("express");
 const path = require("path");
 const { sequelize, Claim, User, Customers } = require("./models");
-//const { Claim, User, sequelize } = require("./config"); // Updated import for Sequelize models
-const { Op } = require("sequelize"); //new line
-const bcrypt = require('bcryptjs');
+const { Op } = require("sequelize");
+const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
-const session = require('express-session');
-
-const { body, validationResult } = require('express-validator');
-//const bcrypt = require('bcrypt');
+const session = require("express-session");
+const { body, validationResult } = require("express-validator");
 
 const app = express();
 
+/* ---------------------------
+   Basic middleware
+   --------------------------- */
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'secret-key', // set a strong secret in production
+  secret: process.env.SESSION_SECRET || 'secret-key',
   resave: false,
   saveUninitialized: false,
   cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 day
 }));
 
-
 const flash = require('connect-flash');
 app.use(flash());
 
-// CRITICAL: Parse form data
-app.use(express.urlencoded({ extended: true }));  // ← ADD THIS
+// static files (public and CSS folder)
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "pages-css")));
 
-// Convert data to JSON format
-app.use(express.json());
-//app.use(express.urlencoded({ extended: false }));
-
-// Static files
-app.use(express.static("public"));
-app.use(express.static("pages-css"));
-
-// Set EJS as the view engine
+// view engine
 app.set("view engine", "ejs");
 
-// Routes for rendering pages
-app.get("/", (req, res) => {
-    res.render("main");
-});
-app.get("/customer-claim-submit", (req, res) => {
-    res.render("customer-claim-submit");
-});
-
-// ---------------------------------------------
-// PUBLIC CUSTOMER CLAIM SUBMISSION PAGE
-// ---------------------------------------------
-app.get("/customer-claim-submit-public", (req, res) => {
-    res.render("customer-claim-submit");
-});
-
-// ---------------------------------------------
-// PUBLIC CLAIM SUBMISSION FORM HANDLER
-// (reuses your existing submit-and-send-email logic)
-// ---------------------------------------------
-app.post("/customer-claim-submit-public", async (req, res, next) => {
-    req.url = "/submit-and-send-email";  // forward to existing logic
-    next();
-});
-
-
-app.get("/login", (req, res) => {
-    res.render("login");
-});
-
-app.get("/signup", (req, res) => {
-    res.render("signup");
-});
-
-
-
-// Login protection middleware
+/* ---------------------------
+   Helper middleware
+   --------------------------- */
 function checkLogin(req, res, next) {
-    if (!req.session.userId) {
-        return res.redirect("/login");
-    }
-    next();
+  if (!req.session || !req.session.userId) {
+    return res.redirect("/login");
+  }
+  next();
 }
 
-// ----------------------------------------------------------
-// PROTECTED ROUTES - EVERYTHING BELOW REQUIRES LOGIN
-// ----------------------------------------------------------
-app.use(checkLogin);
+/* ---------------------------
+   PUBLIC ROUTES (no login)
+   --------------------------- */
 
+// Home / marketing page
+app.get("/", (req, res) => res.render("main"));
 
-app.get('/account-page', (req, res) => {
-    res.render('account-page');
+// Public claim form (for emailed customers)
+app.get("/customer-claim-submit-public", (req, res) => {
+  res.render("customer-claim-submit");
 });
 
-app.get('/claimsubmit-page', (req, res) => {
-    res.render('claimsubmit-page');
+// Public form could POST directly to /submit-and-send-email from client JS.
+// (If you prefer to keep a dedicated public POST route, you can forward.)
+app.post("/customer-claim-submit-public", async (req, res, next) => {
+  // If you prefer forwarding, just call the same handler by continuing to /submit-and-send-email.
+  req.url = "/submit-and-send-email";
+  next();
 });
 
-/* Removed registerlogin-page route as separate login and signup routes are implemented
-app.get('/registerlogin-page', (req, res) => {
-    res.render('registerlogin-page');
-});*/
+// Login & Signup pages (render)
+app.get("/login", (req, res) => res.render("login", { error: null, old: {} }));
+app.get("/signup", (req, res) => res.render("signup", { error: null, old: {} }));
 
+/* ---------------------------
+   AUTH: Signup & Login POST
+   --------------------------- */
 
-app.get('/homepage', (req, res) => {
-    res.render('homepage');
-});
-
-
-// Email page route
-app.get("/email-page", (req, res) => {
-    res.render("index");
-});
-// Customer manager page route
-app.get("/customer-manager", (req, res) => {
-    res.render("customer-manager");
-});
-
-
-/*
-// Register User
-app.post("/signup", async (req, res) => {
-    const data = {
-        username: req.body.username,      // matches your DB column
-        name: req.body.name || req.body.username, // display name
-        email: req.body.email || "",
-        phone: req.body.phone || "",
-        password: req.body.password
-    };
-
-    // Check if the username already exists
-    const existingUser = await User.findOne({ where: { username: data.username } });
-    if (existingUser) {
-        return res.send('User already exists. Please choose a different username.');
-    }
-
-    // Hash the password
-    const saltRounds = 10;
-    data.password = await bcrypt.hash(data.password, saltRounds);
-
-    try {
-        const newUser = await User.create(data);
-        console.log("New user created:", newUser.username);
-        res.send('<script>alert("Registration successful! Please log in."); window.location.href = "/login";</script>');
-    } catch (error) {
-        console.error("Error registering user:", error);
-        res.status(500).send("An error occurred during registration.");
-    }
-});
-*/
-// ---------------------------------------------------
-// POST /signup – Register a new user
-// ---------------------------------------------------
+// Signup with validation
 app.post(
   "/signup",
   [
-    // ---- Validation Chain ----
-    body('username')
-      .trim()
-      .notEmpty().withMessage('Username is required.')
-      .isLength({ min: 3 }).withMessage('Username must be at least 3 characters.'),
-    
-    body('name')
-      .trim()
-      .notEmpty().withMessage('Full name is required.'),
-
-    body('email')
-      .trim()
-      .isEmail().withMessage('Please enter a valid email.')
-      .normalizeEmail(),
-
-    body('phone')
-    .trim()
-    .matches(/^\(\d{3}\)\d{3}-\d{4}$/)
-    .withMessage('Phone must be in format (555)123-4567.'),
-
-    body('password')
-      .isLength({ min: 8 }).withMessage('Password must be at least 8 characters.')
+    body('username').trim().notEmpty().withMessage('Username is required.').isLength({ min: 3 }),
+    body('name').trim().notEmpty().withMessage('Full name is required.'),
+    body('email').trim().isEmail().withMessage('Please enter a valid email.').normalizeEmail(),
+    body('phone').trim().matches(/^\(\d{3}\)\d{3}-\d{4}$/).withMessage('Phone must be in format (555)123-4567.'),
+    body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters.')
       .matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])/)
       .withMessage('Password must contain uppercase, lowercase, number, and special character (@$!%*?&).'),
-
-    body('confirm_password')
-      .custom((value, { req }) => value === req.body.password)
-      .withMessage('Passwords do not match.')
+    body('confirm_password').custom((value, { req }) => value === req.body.password).withMessage('Passwords do not match.')
   ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      // Extract only the first error per field for cleaner display
       const errorMap = {};
-      errors.array().forEach(err => {
-        if (!errorMap[err.param]) errorMap[err.param] = err.msg;
-      });
-
-      return res.render('signup', {
-        error: Object.values(errorMap).join(' '),
-        old: req.body
-      });
+      errors.array().forEach(err => { if (!errorMap[err.param]) errorMap[err.param] = err.msg; });
+      return res.render('signup', { error: Object.values(errorMap).join(' '), old: req.body });
     }
 
-    // ---- Build clean data object ----
-    const data = {
-      username: req.body.username.trim(),
-      name: req.body.name.trim() || req.body.username.trim(),
-      email: req.body.email.trim(),
-      phone: req.body.phone.trim(),
-      password: req.body.password
-    };
-
-    // ---- Check for existing username ----
-    const existingUser = await User.findOne({ where: { username: data.username } });
-    if (existingUser) {
-      return res.render('signup', {
-        error: 'Username already taken. Please choose another.',
-        old: req.body
-      });
-    }
-
-    // ---- Hash password ----
-    const saltRounds = 10;
-    data.password = await bcrypt.hash(data.password, saltRounds);
-
-    // ---- Create user ----
     try {
-      const newUser = await User.create(data);
-      console.log("New user created:", newUser.username);
+      const data = {
+        username: req.body.username.trim(),
+        name: req.body.name.trim(),
+        email: req.body.email.trim(),
+        phone: req.body.phone.trim(),
+        password: await bcrypt.hash(req.body.password, 10)
+      };
 
-      // Success: redirect with flash-style message (or just redirect)
+      const existing = await User.findOne({ where: { username: data.username } });
+      if (existing) return res.render('signup', { error: 'Username already taken. Please choose another.', old: req.body });
+
+      await User.create(data);
       req.flash('success', 'Registration successful! Please log in.');
       return res.redirect('/login');
-    } catch (error) {
-      console.error("Error registering user:", error);
-
-      // Handle DB validation errors (e.g. unique email)
-      if (error.name === 'SequelizeUniqueConstraintError') {
-        return res.render('signup', {
-          error: 'Email or username already in use.',
-          old: req.body
-        });
-      }
-
-      return res.render('signup', {
-        error: 'An unexpected error occurred. Please try again.',
-        old: req.body
-      });
+    } catch (err) {
+      console.error("Signup error:", err);
+      return res.render('signup', { error: 'An error occurred during registration.', old: req.body });
     }
   }
 );
 
-/*
-// Login user
+// Login
 app.post("/login", async (req, res) => {
-    try {
-        const user = await User.findOne({ where: { name: req.body.username } });
-        if (!user) {
-            return res.send("Username not found.");
-        }
+  const { username, password } = req.body || {};
+  if (!username || !password) return res.render("login", { error: "Please enter username and password.", old: req.body });
 
-        const isPasswordMatch = await bcrypt.compare(req.body.password, user.password);
-        if (!isPasswordMatch) {
-            return res.send("Incorrect password.");
-        }
+  try {
+    const user = await User.findOne({ where: { username } });
+    if (!user) return res.render("login", { error: "Username not found.", old: req.body });
 
-        res.render("homepage");
-    } catch (error) {
-        console.error("Error logging in:", error);
-        res.status(500).send("An error occurred during login.");
-    }
+    const ok = await bcrypt.compare(password, user.password);
+    if (!ok) return res.render("login", { error: "Incorrect password.", old: req.body });
+
+    req.session.userId = user.id;
+    res.redirect("/homepage");
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).send("Server error during login.");
+  }
 });
+
+/* ---------------------------
+   PUBLIC CLAIM SUBMISSION HANDLER
+   ---------------------------
+   This route is PUBLIC so emailed customers can POST here.
+   It saves the claim (Sequelize Claim model) and sends confirmation email.
 */
-
-// Login user added new
-app.post("/login", async (req, res) => {
-    try {
-        const user = await User.findOne({ where: { username: req.body.username } });
-        if (!user) return res.send("Username not found.");
-
-        const isPasswordMatch = await bcrypt.compare(req.body.password, user.password);
-        if (!isPasswordMatch) return res.send("Incorrect password.");
-
-        // Save user ID in session
-        req.session.userId = user.id;
-
-        // Redirect to homepage
-        res.redirect("/homepage");
-    } catch (error) {
-        console.error("Error logging in:", error);
-        res.status(500).send("An error occurred during login.");
-    }
-});
-
-
-
-// Render the viewclaims-page form
-app.get("/viewclaims-page", (req, res) => {
-    res.render("viewclaims-page", { 
-        claims: [], 
-        searchType: null, 
-        searchValue: null 
-    });
-});
-
-
-// Search for a claim by policy number, name, or phone (PostgreSQL via Sequelize)
-app.get('/view-claim', async (req, res) => {
-    const { searchType, searchValue, policyNumber } = req.query;
-
-    try {
-        let whereClause = {};
-
-        // Keep backward compatibility with your old form
-        if (policyNumber) {
-            whereClause.policyNumber = policyNumber;
-        } else if (searchType === 'policyNumber') {
-            whereClause.policyNumber = searchValue;
-        } else if (searchType === 'name') {
-            whereClause.name = { [Op.iLike]: `%${searchValue}%` };
-        } else if (searchType === 'phone') {
-            whereClause.phone = { [Op.iLike]: `%${searchValue}%` };
-        }
-
-        const claims = await Claim.findAll({ where: whereClause });
-
-        res.render('viewclaims-page', { 
-            claims,
-            searchType,
-            searchValue
-        });
-
-    } catch (error) {
-        console.error('Error retrieving claim:', error);
-        res.status(500).send('Server error occurred while searching for claim.');
-    }
-});
-
-
-
-// Export claims to Excel
-app.get("/export-claims", async (req, res) => {
-    const { searchType, searchValue } = req.query;
-
-    try {
-        let whereClause = {};
-
-        if (searchType === "policyNumber") {
-            whereClause.policyNumber = searchValue;
-        } else if (searchType === "name") {
-            whereClause.name = { [Op.iLike]: `%${searchValue}%` };
-        } else if (searchType === "phone") {
-            whereClause.phone = { [Op.iLike]: `%${searchValue}%` };
-        }
-
-        const claims = await Claim.findAll({ where: whereClause });
-
-        // Build Excel
-        const Excel = require("exceljs");
-        const workbook = new Excel.Workbook();
-        const sheet = workbook.addWorksheet("Claims");
-
-        // Header row
-        sheet.addRow([
-            "Policy Number",
-            "Name",
-            "Email",
-            "Phone",
-            "Insurance Company",
-            "Date of Loss",
-            "Location",
-            "Auto Loss",
-            "Property Loss",
-            "Description"
-        ]);
-
-        // Data rows
-        claims.forEach(claim => {
-            sheet.addRow([
-                claim.policyNumber,
-                claim.name,
-                claim.email,
-                claim.phone,
-                claim.insuranceCompany,
-                claim.claimDate ? claim.claimDate.toDateString() : "",
-                claim.location,
-                claim.autoLoss ? "Yes" : "No",
-                claim.propertyLoss ? "Yes" : "No",
-                claim.description
-            ]);
-        });
-
-        // Send the file to the browser
-        res.setHeader(
-            "Content-Type",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        );
-        res.setHeader(
-            "Content-Disposition",
-            "attachment; filename=claims_export.xlsx"
-        );
-
-        await workbook.xlsx.write(res);
-        res.end();
-
-    } catch (err) {
-        console.error("Excel export error:", err);
-        res.status(500).send("Error exporting claims.");
-    }
-});
-
-
-
-
-// Route to handle sending email and submitting claim to database
 app.post("/submit-and-send-email", async (req, res) => {
+  try {
+    // Accept either firstname+lastname or single 'name'
+    let name = req.body.name;
+    if (!name && req.body.firstname) {
+      name = `${req.body.firstname || ""} ${req.body.lastname || ""}`.trim();
+    }
+
     const claimData = {
-        email: req.body.email,
-        name: req.body.name,
-        phone: req.body.phone,
-        policyNumber: req.body.policyNumber,
-        insuranceCompany: req.body.insuranceCompany,
-        claimDate: req.body.claimDate,
-        autoLoss: req.body.autoLoss,
-        propertyLoss: req.body.propertyLoss,
-        location: req.body.location,
-        description: req.body.description
+      email: req.body.email || null,
+      name: name || null,
+      phone: req.body.phone || null,
+      policyNumber: req.body.policyNumber || null,
+      insuranceCompany: req.body.insuranceCompany || null,
+      claimDate: req.body.claimDate || null,
+      autoLoss: req.body.autoLoss || false,
+      propertyLoss: req.body.propertyLoss || false,
+      location: req.body.location || null,
+      description: req.body.description || null
     };
 
-    try {
-        const savedClaim = await Claim.create(claimData);
-        console.log("Claim saved successfully:", savedClaim);
-    } catch (error) {
-        console.error("Error saving claim:", error);
-        return res.status(500).send("An error occurred while submitting your claim.");
-    }
+    const savedClaim = await Claim.create(claimData);
+    console.log("Claim saved:", savedClaim.id || savedClaim);
 
-    // Configure Nodemailer transporter
-    const transporter = nodemailer.createTransport({
+    // Send confirmation email (if address provided)
+    if (claimData.email) {
+      const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
         secure: false,
         auth: {
-            user: process.env.EMAIL_USER, // Use environment variable for security
-            pass: process.env.EMAIL_PASS  // Use environment variable for security
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
         }
-    });
+      });
 
-    // Email options
-    const mailOptions = {
+      const mailOptions = {
         from: '"CLAIM STALKER" <noreply@claimstalker.com>',
         to: claimData.email,
         subject: "Claim Submission Notification",
-        text: `Hello ${claimData.name},\n\nYour claim has been submitted successfully.`,
+        text: `Hello ${claimData.name || ""},\n\nYour claim has been submitted successfully.`,
         html: `
-            <p>Hello <b>${claimData.name}</b>,</p>
-            <p>Your claim has been submitted successfully with the following details:</p>
-            <ul>
-                <li>Email: ${claimData.email}</li>
-                <li>Phone Number: ${claimData.phone}</li>
-                <li>Policy Number: ${claimData.policyNumber}</li>
-                <li>Insurance Company: ${claimData.insuranceCompany}</li>
-                <li>Claim Date: ${claimData.claimDate}</li>
-                <li>Auto Loss: ${claimData.autoLoss}</li>
-                <li>Property Loss: ${claimData.propertyLoss}</li>
-                <li>Location: ${claimData.location}</li>
-                <li>Description: ${claimData.description}</li>
-            </ul>
+          <p>Hello <b>${claimData.name || "Customer"}</b>,</p>
+          <p>Your claim was received. Summary:</p>
+          <ul>
+            <li>Policy Number: ${claimData.policyNumber || "—"}</li>
+            <li>Date of Loss: ${claimData.claimDate || "—"}</li>
+            <li>Location: ${claimData.location || "—"}</li>
+            <li>Description: ${claimData.description || "—"}</li>
+          </ul>
         `
-    };
+      };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-        console.error(`Error: ${error.message}`);
-        return res.status(500).json({ success: false, message: "Email could not be sent." });
+      try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log("Email sent:", info.response);
+      } catch (mailErr) {
+        console.error("Email sending error:", mailErr);
+        // don't fail the claim save if email fails; return a warning
+        return res.status(200).json({ success: true, message: "Claim saved but email failed to send." });
+      }
     }
-    console.log(`Email sent: ${info.response}`);
-    res.json({ success: true, message: "Claim submitted and email sent successfully!" });
-    });
+
+    return res.status(200).json({ success: true, message: "Claim submitted and email (if provided) sent successfully!" });
+  } catch (err) {
+    console.error("Submit-and-send-email error:", err);
+    return res.status(500).json({ success: false, message: "Server error while submitting claim." });
+  }
 });
 
-// Sync Sequelize models and start server
+/* ---------------------------
+   PROTECTED ROUTES
+   (Anything below here requires login)
+   --------------------------- */
+app.use(checkLogin);
+
+// Internal (employee) claim form (protected)
+app.get("/customer-claim-submit", (req, res) => {
+  res.render("customer-claim-submit");
+});
+
+// Homepage (protected) — include user object
+app.get("/homepage", async (req, res) => {
+  try {
+    const user = await User.findByPk(req.session.userId);
+    if (!user) return res.redirect("/login");
+    res.render("homepage", { user });
+  } catch (err) {
+    console.error("Homepage error:", err);
+    res.status(500).send("Server error");
+  }
+});
+
+// Account page
+app.get("/account", async (req, res) => {
+  try {
+    const user = await User.findByPk(req.session.userId);
+    if (!user) return res.redirect("/login");
+    res.render("account-page", { user });
+  } catch (err) {
+    console.error("Account error:", err);
+    res.status(500).send("Server error");
+  }
+});
+
+// Customer manager & admin pages
+app.get("/customer-manager", (req, res) => res.render("customer-manager"));
+app.get("/email-page", (req, res) => res.render("index"));
+
+// View claims UI
+app.get("/viewclaims-page", (req, res) => res.render("viewclaims-page", { claims: [], searchType: null, searchValue: null }));
+
+// Fetch claims (protected search)
+app.get("/view-claim", async (req, res) => {
+  const { searchType, searchValue, policyNumber } = req.query;
+  try {
+    let where = {};
+    if (policyNumber) where.policyNumber = policyNumber;
+    else if (searchType === 'policyNumber') where.policyNumber = searchValue;
+    else if (searchType === 'name') where.name = { [Op.iLike]: `%${searchValue}%` };
+    else if (searchType === 'phone') where.phone = { [Op.iLike]: `%${searchValue}%` };
+
+    const claims = await Claim.findAll({ where });
+    res.render("viewclaims-page", { claims, searchType, searchValue });
+  } catch (err) {
+    console.error("view-claim error:", err);
+    res.status(500).send("Server error");
+  }
+});
+
+// Export claims to Excel (protected)
+app.get("/export-claims", async (req, res) => {
+  const { searchType, searchValue } = req.query;
+  try {
+    let where = {};
+    if (searchType === "policyNumber") where.policyNumber = searchValue;
+    else if (searchType === "name") where.name = { [Op.iLike]: `%${searchValue}%` };
+    else if (searchType === "phone") where.phone = { [Op.iLike]: `%${searchValue}%` };
+
+    const claims = await Claim.findAll({ where });
+    const Excel = require("exceljs");
+    const workbook = new Excel.Workbook();
+    const sheet = workbook.addWorksheet("Claims");
+
+    sheet.addRow(["Policy Number", "Name", "Email", "Phone", "Insurance Company", "Date of Loss", "Location", "Auto Loss", "Property Loss", "Description"]);
+    claims.forEach(c => sheet.addRow([c.policyNumber, c.name, c.email, c.phone, c.insuranceCompany, c.claimDate ? c.claimDate.toDateString() : "", c.location, c.autoLoss ? "Yes" : "No", c.propertyLoss ? "Yes" : "No", c.description]));
+
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", "attachment; filename=claims_export.xlsx");
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (err) {
+    console.error("Export error:", err);
+    res.status(500).send("Error exporting claims.");
+  }
+});
+
+// Customers API (protected)
+app.get("/customers/search", async (req, res) => {
+  const { query } = req.query;
+  try {
+    const customer = await Customers.findOne({
+      where: {
+        [Op.or]: [
+          { customer_id: query },
+          { last_name: { [Op.iLike]: `%${query}%` } }
+        ]
+      }
+    });
+    if (!customer) return res.json({ success: false });
+    res.json({ success: true, customer });
+  } catch (err) {
+    res.json({ success: false, error: err.message });
+  }
+});
+
+app.post("/customers/save", async (req, res) => {
+  const data = req.body;
+  try {
+    if (data.customer_id) {
+      await Customers.update(data, { where: { customer_id: data.customer_id } });
+      return res.json({ success: true, message: "Customer updated successfully." });
+    } else {
+      await Customers.create(data);
+      return res.json({ success: true, message: "Customer created successfully." });
+    }
+  } catch (err) {
+    return res.json({ success: false, message: err.message });
+  }
+});
+
+/* ---------------------------
+   Start server
+   --------------------------- */
 const port = process.env.PORT || 5000;
 sequelize.sync().then(() => {
-    app.listen(port, () => {
-        console.log(`Server listening on port ${port}`);
-    });
+  app.listen(port, () => console.log(`Server listening on port ${port}`));
 }).catch(err => {
-    console.error("Failed to sync database:", err);
-});
-
-// Account page route
-// Account page route
-app.get("/account", async (req, res) => {
-    if (!req.session.userId) {
-        return res.redirect("/login");
-    }
-
-    try {
-        const user = await User.findByPk(req.session.userId);
-        if (!user) return res.redirect("/login");
-
-        res.render("account-page", { user });
-    } catch (err) {
-        console.error("Error fetching user data:", err);
-        res.status(500).send("Server error");
-    }
-});
-
-
-// Home page
-app.get("/homepage", async (req, res) => {
-    if (!req.session.userId) {
-        return res.redirect("/login"); // redirect if not logged in
-    }
-
-    try {
-        const user = await User.findByPk(req.session.userId);
-        if (!user) return res.redirect("/login");
-
-        res.render("homepage", { user }); // pass user to EJS
-    } catch (err) {
-        console.error("Error fetching user for homepage:", err);
-        res.status(500).send("Server error");
-    }
-});
-
-// Customer search route for customer manager
-app.get("/customers/search", async (req, res) => {
-    const { query } = req.query;
-
-    try {
-        const customer = await Customers.findOne({
-            where: {
-                [Op.or]: [
-                    { customer_id: query },
-                    { last_name: { [Op.iLike]: `%${query}%` } }
-                ]
-            }
-        });
-
-        if (!customer) {
-            return res.json({ success: false });
-        }
-
-        res.json({ success: true, customer });
-    } catch (err) {
-        res.json({ success: false, error: err.message });
-    }
-});
-
-// Customer save (create/update) route for customer manager
-app.post("/customers/save", async (req, res) => {
-    const data = req.body;
-
-    try {
-        let customer;
-
-        if (data.customer_id) {
-            // Update existing
-            customer = await Customers.update(data, {
-                where: { customer_id: data.customer_id }
-            });
-
-            return res.json({ success: true, message: "Customer updated successfully." });
-        } else {
-            // Create new
-            customer = await Customers.create(data);
-            return res.json({ success: true, message: "Customer created successfully." });
-        }
-
-    } catch (err) {
-        return res.json({ success: false, message: err.message });
-    }
+  console.error("Failed to sync database:", err);
 });
