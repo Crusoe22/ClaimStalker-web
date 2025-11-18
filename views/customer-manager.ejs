@@ -32,7 +32,6 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Agency</th>
                     <th>First</th>
                     <th>Last</th>
                     <th>Phone</th>
@@ -59,8 +58,6 @@
 
         <input type="hidden" id="customer_id">
 
-        <label>Agency ID</label>
-        <input type="number" id="agency_id" required>
 
         <label>First Name</label>
         <input type="text" id="first_name" required>
@@ -152,7 +149,6 @@ function searchCustomers() {
 
                 row.innerHTML = `
                     <td>${c.customer_id}</td>
-                    <td>${c.agency_id}</td>
                     <td>${c.first_name}</td>
                     <td>${c.last_name}</td>
                     <td>${c.phone_number || ""}</td>
@@ -175,7 +171,7 @@ function searchCustomers() {
 // ========================================================
 function loadCustomerIntoForm(c) {
     document.getElementById("customer_id").value = c.customer_id;
-    document.getElementById("agency_id").value = c.agency_id;
+    //document.getElementById("agency_id").value = c.agency_id;
     document.getElementById("first_name").value = c.first_name;
     document.getElementById("last_name").value = c.last_name;
     document.getElementById("phone_number").value = c.phone_number || "";
@@ -197,7 +193,7 @@ function submitCustomer() {
 
     const payload = {
         customer_id: document.getElementById("customer_id").value || null,
-        agency_id: document.getElementById("agency_id").value,
+        //agency_id: document.getElementById("agency_id").value,
         first_name: document.getElementById("first_name").value,
         last_name: document.getElementById("last_name").value,
         phone_number: document.getElementById("phone_number").value,
