@@ -236,6 +236,10 @@ app.get("/customer-claim-submit", (req, res) => {
   res.render("customer-claim-submit");
 });
 
+app.get('/send-customer-claim-submit', (req, res) => {
+    res.render('send-customer-claim-submit');
+});
+
 app.get('/claimsubmit-page', (req, res) => {
     res.render('claimsubmit-page');
 });
