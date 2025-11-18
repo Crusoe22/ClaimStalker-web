@@ -377,11 +377,11 @@ app.post('/send-customer-claim-submit', async (req, res) => {
         from: '"CLAIM STALKER" <noreply@claimstalker.com>',
         to: customer.email,
         subject: 'Submit Your Insurance Claim',
-        text: `Hello ${name},\n\nPlease click the link below to submit your claim:\n${process.env.CLAIM_SUBMIT_URL}`,
+        text: `Hello ${name},\n\nPlease click the link below to submit your claim: "https://claimstalker-web.onrender.com/customer-claim-submit"\n`,
         html: `
           <p>Hello <b>${name}</b>,</p>
           <p>Please click the link below to submit your insurance claim:</p>
-          <p><a href="${process.env.CLAIM_SUBMIT_URL}">Submit Claim</a></p>
+          <p><a href="https://claimstalker-web.onrender.com/customer-claim-submit">Submit Claim</a></p>
           <p>Thank you!</p>
         `
       };
