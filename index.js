@@ -221,6 +221,10 @@ app.get("/customer-claim-submit", (req, res) => {
   res.render("customer-claim-submit");
 });
 
+app.get('/claimsubmit-page', (req, res) => {
+    res.render('claimsubmit-page');
+});
+
 // Homepage (protected) — include user object
 app.get("/homepage", async (req, res) => {
   try {
