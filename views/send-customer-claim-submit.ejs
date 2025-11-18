@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Send Customer Claim Submit Email</title>
+  <link rel="stylesheet" href="/page-css/send-customer-claim-submit.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Send Claim Submission Email to All Customers</h1>
+    <p>Click the button below to send an email to all customers with a link to submit claims.</p>
+    <button id="sendEmailsBtn">Send Emails</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    const button = document.getElementById('sendEmailsBtn');
+    const status = document.getElementById('status');
+
+    button.addEventListener('click', async () => {
+      status.textContent = 'Sending emails...';
+      try {
+        const response = await fetch('/send-customer-claim-submit', { method: 'POST' });
+        const data = await response.json();
+        status.textContent = data.message;
+      } catch (error) {
+        status.textContent = 'Error sending emails. Check server logs.';
+      }
+    });
+  </script>
+</body>
+</html>

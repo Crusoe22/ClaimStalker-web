@@ -8,6 +8,32 @@ const nodemailer = require("nodemailer");
 const session = require("express-session");
 const { body, validationResult } = require("express-validator");
 
+
+// PostgreSQL connection (Sequelize)
+const sequelize = new Sequelize(process.env.POSTGRES_URI, {
+  dialect: 'postgres',
+  logging: false,
+});
+
+// Customer model
+const Customer = sequelize.define('customer', {
+  contact_email: { type: DataTypes.STRING },
+  contact_person: { type: DataTypes.STRING }
+}, { tableName: 'customers', timestamps: false });
+
+// Nodemailer transporter (reuse your /submit-and-send-email config)
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+
+
 const app = express();
 
 /* ---------------------------
@@ -334,6 +360,62 @@ app.post("/customers/save", async (req, res) => {
     return res.json({ success: false, message: err.message });
   }
 });
+
+
+
+
+
+// Endpoint to send email to all customers
+app.post('/send-customer-claim-submit', async (req, res) => {
+  try {
+    const customers = await Customer.findAll();
+
+    if (!customers.length) {
+      return res.json({ message: 'No customers found to send emails.' });
+    }
+
+    for (const customer of customers) {
+      const name = customer.contact_person || 'Customer';
+      const email = customer.contact_email;
+
+      if (!email) continue;
+
+      const mailOptions = {
+        from: '"CLAIM STALKER" <noreply@claimstalker.com>',
+        to: email,
+        subject: 'Submit Your Insurance Claim',
+        text: `Hello ${name},\n\nPlease click the link below to submit your claim:\n${process.env.CLAIM_SUBMIT_URL}`,
+        html: `
+          <p>Hello <b>${name}</b>,</p>
+          <p>Please click the link below to submit your insurance claim:</p>
+          <p><a href="${process.env.CLAIM_SUBMIT_URL}">Submit Claim</a></p>
+          <p>Thank you!</p>
+        `
+      };
+
+      try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log(`Email sent to ${email}:`, info.response);
+      } catch (err) {
+        console.error(`Failed to send email to ${email}:`, err);
+      }
+    }
+
+    res.json({ message: `Emails sent (or attempted) to ${customers.length} customers.` });
+  } catch (err) {
+    console.error('Error sending customer emails:', err);
+    res.status(500).json({ message: 'Server error while sending emails.' });
+  }
+});
+
+// Serve EJS page
+app.set('view engine', 'ejs');
+app.get('/send-customer-claim-submit-page', (req, res) => {
+  res.render('send-customer-claim-submit');
+});
+
+
+
 
 /* ---------------------------
    Start server
