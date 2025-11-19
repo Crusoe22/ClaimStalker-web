@@ -9,7 +9,7 @@ const sequelize = new Sequelize(process.env.POSTGRES_URI, {
 const Claim = require('./Claim')(sequelize, DataTypes);
 const User = require('./User')(sequelize, DataTypes);
 const Customers = require('./Customers')(sequelize, DataTypes);
-const CustomerClaims = require('./models/customer_submitted_claims')(sequelize, DataTypes);
+const CustomerClaims = require('./customer_submitted_claims')(sequelize, DataTypes);
 
 module.exports = {
     sequelize,
