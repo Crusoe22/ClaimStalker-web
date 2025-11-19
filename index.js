@@ -166,8 +166,12 @@ app.post("/submit-customer-claim", async (req, res) => {
       email,
       phone,
       claimDate,
-      location,
-      description
+      address_1,
+      address_2,
+      state,
+      zip_code,
+      description,
+      photo_urls
     } = req.body;
 
     const newClaim = await CustomerClaims.create({
@@ -177,12 +181,12 @@ app.post("/submit-customer-claim", async (req, res) => {
       email,
       phone,
       claim_date: claimDate,
-      address_1: location,
-      address_2: null,
-      state: null,
-      zip_code: null,
+      address_1: address_1,
+      address_2: address_2,
+      state,
+      zip_code,
       description,
-      photo_urls: [] // empty for now
+      photo_urls: photo_urls || [] // empty for now
     });
 
     res.json({
