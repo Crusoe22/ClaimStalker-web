@@ -1,53 +1,49 @@
-/* Style the Sidebar */
+
+/* Sidebar */
 .sidebar {
     position: fixed;
     top: 0;
     left: 0;
-    width: 200px;
+    width: 220px;
     height: 100vh;
-    background-color: #ffffff;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(180deg, #1877f2, #0056b3);
     padding: 20px;
     box-sizing: border-box;
-    z-index: 10; /* Ensure the sidebar is always on top */
-    overflow-y: auto; /* Allows vertical scrolling if content overflows */
-    max-height: 100vh; /* Ensures the sidebar stays within the viewport */
+    color: white;
+    box-shadow: 2px 0 6px rgba(0,0,0,0.15);
 }
 
 .sidebar h2 {
     text-align: center;
-    border-bottom: 2px solid #007bff;
-    font-size: 1.5em;
+    font-size: 1.4em;
     margin-bottom: 20px;
-    color: #1877f2; /* Facebook blue */
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 10px;
 }
 
 .sidebar a {
-    display: block;
-    margin-bottom: 10px;
+    text-decoration: none;
 }
 
 .sidebar button {
     width: 100%;
     padding: 12px;
-    margin: 5px 0;
+    margin: 8px 0;
     font-size: 1em;
     font-weight: 500;
     color: white;
-    background-color: #1877f2;
+    background: rgba(255,255,255,0.15);
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: background 0.3s, transform 0.2s;
 }
 
 .sidebar button:hover {
-    background-color: #1465a3;
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.02);
 }
 
-.sidebar button:active {
-    background-color: #0d3b6f;
-}
 
 /* ===============================
    Global Styles
