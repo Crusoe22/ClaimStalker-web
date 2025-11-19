@@ -17,11 +17,12 @@
 
 <!-- Claim Submission Form -->
 <main class="content">
-    <form id="customerClaimForm" class="claim-form" novalidate>
+    <form id="customerClaimForm" class="claim-form" novalidate enctype="multipart/form-data">
         <h1>Submit Your Claim</h1>
         <p class="form-intro">Please complete the form below to start your insurance claim process.</p>
 
         <div class="form-grid">
+            <!-- Required Fields -->
             <div class="form-group">
                 <label for="policyNumber">Policy Number</label>
                 <input type="text" id="policyNumber" name="policyNumber" placeholder="Policy Number" required>
@@ -52,14 +53,35 @@
                 <input type="date" id="claimDate" name="claimDate" required>
             </div>
 
+            <!-- Optional Address Fields -->
             <div class="form-group full-width">
-                <label for="location">Location of Loss</label>
-                <input type="text" id="location" name="location" placeholder="123 Main St, Springfield" required>
+                <label for="address_1">Address Line 1</label>
+                <input type="text" id="address_1" name="address_1" placeholder="123 Main St" required>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="address_2">Address Line 2</label>
+                <input type="text" id="address_2" name="address_2" placeholder="Apt, Suite, etc.">
+            </div>
+
+            <div class="form-group">
+                <label for="state">State</label>
+                <input type="text" id="state" name="state" placeholder="State">
+            </div>
+
+            <div class="form-group">
+                <label for="zip_code">Zip Code</label>
+                <input type="text" id="zip_code" name="zip_code" placeholder="12345">
             </div>
 
             <div class="form-group full-width">
                 <label for="description">Description of Loss</label>
                 <textarea id="description" name="description" rows="4" placeholder="Describe what happened..." required></textarea>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="photos">Upload Photos (optional, multiple allowed)</label>
+                <input type="file" id="photos" name="photos" multiple accept="image/*">
             </div>
         </div>
 
@@ -92,20 +114,15 @@ const customMessages = {
     email: "Please enter a valid email address.",
     phone: "Please enter your phone number.",
     claimDate: "Please select the date of loss.",
-    location: "Please enter the location of loss.",
+    address_1: "Please enter your address.",
     description: "Please describe what happened."
 };
 
-// Assign custom messages to all required inputs
 for (const [id, message] of Object.entries(customMessages)) {
     const input = document.getElementById(id);
     if (input) {
-        input.addEventListener("invalid", function () {
-            this.setCustomValidity(message);
-        });
-        input.addEventListener("input", function () {
-            this.setCustomValidity("");
-        });
+        input.addEventListener("invalid", function () { this.setCustomValidity(message); });
+        input.addEventListener("input", function () { this.setCustomValidity(""); });
     }
 }
 
@@ -118,15 +135,30 @@ claimForm.addEventListener("submit", async (e) => {
         return;
     }
 
-    // Build JSON payload
     const formData = new FormData(claimForm);
-    const data = Object.fromEntries(formData.entries());
 
-    // Combine firstname + lastname into name for server
-    data.name = `${data.firstname} ${data.lastname}`.trim();
+    // Convert file inputs into array of URLs or file names
+    const photoFiles = formData.getAll("photos");
+    const photoUrls = photoFiles.length ? Array.from(photoFiles).map(f => f.name) : [];
+
+    // Build payload
+    const data = {
+        policyNumber: formData.get("policyNumber"),
+        firstname: formData.get("firstname"),
+        lastname: formData.get("lastname"),
+        email: formData.get("email"),
+        phone: formData.get("phone"),
+        claimDate: formData.get("claimDate"),
+        address_1: formData.get("address_1"),
+        address_2: formData.get("address_2") || null,
+        state: formData.get("state") || null,
+        zip_code: formData.get("zip_code") || null,
+        description: formData.get("description"),
+        photo_urls: photoUrls
+    };
 
     try {
-        const response = await fetch("/submit-and-send-email", {
+        const response = await fetch("/submit-customer-claim", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)

@@ -1,7 +1,7 @@
 // index.js — cleaned and organized version
 const express = require("express");
 const path = require("path");
-const { sequelize, Claim, User, Customers } = require("./models");
+const { sequelize, Claim, User, Customers, CustomerClaims } = require("./models/config");
 const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
@@ -155,6 +155,50 @@ app.post("/login", async (req, res) => {
    This route is PUBLIC so emailed customers can POST here.
    It saves the claim (Sequelize Claim model) and sends confirmation email.
 */
+
+// New route for customer-submitted-claims table
+app.post("/submit-customer-claim", async (req, res) => {
+  try {
+    const {
+      policyNumber,
+      firstname,
+      lastname,
+      email,
+      phone,
+      claimDate,
+      location,
+      description
+    } = req.body;
+
+    const newClaim = await CustomerClaims.create({
+      policy_number: policyNumber,
+      first_name: firstname,
+      last_name: lastname,
+      email,
+      phone,
+      claim_date: claimDate,
+      address_1: location,
+      address_2: null,
+      state: null,
+      zip_code: null,
+      description,
+      photo_urls: [] // empty for now
+    });
+
+    res.json({
+      success: true,
+      message: "Your claim has been submitted successfully!",
+      claim_id: newClaim.claim_id
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to submit claim." });
+  }
+});
+
+
+
 app.post("/submit-and-send-email", async (req, res) => {
   try {
     // Accept either firstname+lastname or single 'name'
