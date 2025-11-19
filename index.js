@@ -66,10 +66,11 @@ function checkLogin(req, res, next) {
 app.get("/", (req, res) => res.render("main"));
 
 // Public claim form (for emailed customers)
-app.get("/customer-claim-submit-public", (req, res) => {
+app.get("/customer-claim-submit", (req, res) => {
   res.render("customer-claim-submit");
 });
 
+/*
 // Public form could POST directly to /submit-and-send-email from client JS.
 // (If you prefer to keep a dedicated public POST route, you can forward.)
 app.post("/customer-claim-submit-public", async (req, res, next) => {
@@ -77,6 +78,7 @@ app.post("/customer-claim-submit-public", async (req, res, next) => {
   req.url = "/submit-and-send-email";
   next();
 });
+*/
 
 // Login & Signup pages (render)
 app.get("/login", (req, res) => res.render("login", { error: null, old: {} }));
@@ -272,6 +274,7 @@ app.post("/submit-and-send-email", async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error while submitting claim." });
   }
 });
+
 
 /* ---------------------------
    PROTECTED ROUTES
