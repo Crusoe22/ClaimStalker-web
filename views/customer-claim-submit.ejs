@@ -152,6 +152,14 @@ claimForm.addEventListener("submit", async (e) => {
     }
 });
 
+function closeModal() {
+    modal.style.display = "none";
+    claimForm.reset();
+}
+
+window.onclick = function(event) {
+    if (event.target === modal) closeModal();
+};
 
 /*
 // ---- Handle Form Submission ----
