@@ -1,5 +1,5 @@
 // index.js — cleaned and organized version
-const express = require("express");
+//const express = require("express");
 const path = require("path");
 const { sequelize, Claim, User, Customers, CustomerClaims } = require("./models/config");
 const { Op } = require("sequelize");
@@ -8,6 +8,7 @@ const nodemailer = require("nodemailer");
 const session = require("express-session");
 const { body, validationResult } = require("express-validator");
 
+import express from 'express';
 import multer from 'multer';
 import dotenv from 'dotenv';
 dotenv.config();
