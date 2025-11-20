@@ -1,20 +1,35 @@
-// index.js — cleaned and organized version
-//const express = require("express");
+// index.js — CommonJS version (require everywhere)
+
+const express = require("express");
 const path = require("path");
-const { sequelize, Claim, User, Customers, CustomerClaims } = require("./models/config");
-const { Op } = require("sequelize");
+const multer = require("multer");
+const dotenv = require("dotenv");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const session = require("express-session");
 const { body, validationResult } = require("express-validator");
+const { Op } = require("sequelize");
 
-import express from 'express';
-import multer from 'multer';
-import dotenv from 'dotenv';
+// Load env
 dotenv.config();
 
-// AWS S3 setup
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+// AWS S3 SDK (CommonJS style)
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+
+// Sequelize models (unchanged)
+const { sequelize, Claim, User, Customers, CustomerClaims } =
+  require("./models/config");
+
+  // Express app
+//const app = express();
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.use(express.static("public"));
+
+
 
 // AWS S3 credentials from environment variables
 const bucketName = process.env.BUCKET_NAME
@@ -33,7 +48,9 @@ const s3 = new S3Client({
 
 // Multer setup for file uploads
 const storage = multer.memoryStorage()
-const upload = multer({ storage: storage })
+//const upload = multer({ storage: storage })
+// Multer for file uploads
+const upload = multer({ dest: "uploads/" });
 
 
 
