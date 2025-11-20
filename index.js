@@ -7,6 +7,7 @@ const dotenv = require("dotenv");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const session = require("express-session");
+const crypto = require("crypto");
 const { body, validationResult } = require("express-validator");
 const { Op } = require("sequelize");
 
@@ -30,6 +31,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
 
+
+const randomImageName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
 
 // AWS S3 credentials from environment variables
 const bucketName = process.env.BUCKET_NAME
@@ -328,7 +331,9 @@ app.post("/submit-customer-claim", upload.array('photos', 12), async (req, res) 
     const uploadedImageURLs = [];
 
     for (const file of req.files) {
-      const Key = `claims/${Date.now()}-${file.originalname}`;
+      const extension = path.extname(file.originalname);
+      const Key = `claims/${Date.now()}-${randomImageName()}${extension}`;
+      //const Key = `claims/${Date.now()}-${randomImageName()}`; //file.originalname
 
       const uploadParams = {
         Bucket: bucketName,
