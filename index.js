@@ -21,7 +21,7 @@ const { sequelize, Claim, User, Customers, CustomerClaims } =
   require("./models/config");
 
   // Express app
-//const app = express();
+const app = express();
 
 
 app.use(express.json());
@@ -67,7 +67,7 @@ const transporter = nodemailer.createTransport({
 
 
 
-const app = express();
+//const app = express();
 
 /* ---------------------------
    Basic middleware
