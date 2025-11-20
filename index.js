@@ -48,9 +48,9 @@ const s3 = new S3Client({
 
 // Multer setup for file uploads
 const storage = multer.memoryStorage()
-//const upload = multer({ storage: storage })
+const upload = multer({ storage: storage })
 // Multer for file uploads
-const upload = multer({ dest: "uploads/" });
+//const upload = multer({ dest: "uploads/" });
 
 
 
