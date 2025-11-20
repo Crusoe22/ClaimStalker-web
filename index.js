@@ -8,6 +8,32 @@ const nodemailer = require("nodemailer");
 const session = require("express-session");
 const { body, validationResult } = require("express-validator");
 
+import multer from 'multer';
+import dotenv from 'dotenv';
+dotenv.config();
+
+// AWS S3 setup
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+
+// AWS S3 credentials from environment variables
+const bucketName = process.env.BUCKET_NAME
+const bucketRegion = process.env.BUCKET_REGION
+const accessKey = process.env.ACCESS_KEY
+const secretAccessKey = process.env.SECRET_ACCESS_KEY
+
+// Create S3 client
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: accessKey,
+    secretAccessKey: secretAccessKey
+  },
+  region: bucketRegion
+});
+
+// Multer setup for file uploads
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
+
 
 
 // Nodemailer transporter (reuse your /submit-and-send-email config)
@@ -157,9 +183,9 @@ app.post("/login", async (req, res) => {
    This route is PUBLIC so emailed customers can POST here.
    It saves the claim (Sequelize Claim model) and sends confirmation email.
 */
-
+/*
 // New route for customer-submitted-claims table
-app.post("/submit-customer-claim", async (req, res) => {
+app.post("/submit-customer-claim", upload.array('photo_urls', 12), async (req, res) => {
   try {
     const {
       policyNumber,
@@ -194,6 +220,132 @@ app.post("/submit-customer-claim", async (req, res) => {
     res.json({
       success: true,
       message: "Your claim has been submitted successfully!",
+      claim_id: newClaim.claim_id
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to submit claim." });
+  }
+});
+
+
+app.post("/submit-customer-claim", upload.array('photo_urls', 12), async (req, res) => {
+  try {
+    const {
+      policyNumber,
+      firstname,
+      lastname,
+      email,
+      phone,
+      claimDate,
+      address_1,
+      address_2,
+      state,
+      zip_code,
+      description
+    } = req.body;
+
+    // Extract file paths from req.files
+    const uploadedFiles = req.files ? req.files.map(file => file.path) : [];
+
+    const newClaim = await CustomerClaims.create({
+      policy_number: policyNumber,
+      first_name: firstname,
+      last_name: lastname,
+      email,
+      phone,
+      claim_date: claimDate,
+      address_1,
+      address_2,
+      state,
+      zip_code,
+      description,
+      photo_urls: uploadedFiles // <— store file paths or URLs
+    });
+
+    req.file.buffer
+
+    const params ={
+      Bucket: bucketName,
+      Key: req.file.originalname,
+      Body: req.file.buffer,
+      ContentType: req.file.mimetype
+    }
+
+    const command = new PutObjectCommand(params)
+    await s3.send(command);
+    
+
+    res.json({
+      success: true,
+      message: "Your claim has been submitted successfully!",
+      claim_id: newClaim.claim_id
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to submit claim." });
+  }
+});
+*/
+
+app.post("/submit-customer-claim", upload.array('photos', 12), async (req, res) => {
+  try {
+    const {
+      policyNumber,
+      firstname,
+      lastname,
+      email,
+      phone,
+      claimDate,
+      address_1,
+      address_2,
+      state,
+      zip_code,
+      description
+    } = req.body;
+
+    // Upload each file to S3
+    const uploadedImageURLs = [];
+
+    for (const file of req.files) {
+      const Key = `claims/${Date.now()}-${file.originalname}`;
+
+      const uploadParams = {
+        Bucket: bucketName,
+        Key,
+        Body: file.buffer,
+        ContentType: file.mimetype
+      };
+
+      // Upload to S3
+      await s3.send(new PutObjectCommand(uploadParams));
+
+      // Create PUBLIC URL (or signed URL if bucket private)
+      const publicUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${Key}`;
+      uploadedImageURLs.push(publicUrl);
+    }
+
+    // Save claim in DB
+    const newClaim = await CustomerClaims.create({
+      policy_number: policyNumber,
+      first_name: firstname,
+      last_name: lastname,
+      email,
+      phone,
+      claim_date: claimDate,
+      address_1,
+      address_2,
+      state,
+      zip_code,
+      description,
+      photo_urls: uploadedImageURLs   // 💾 Save S3 URLs
+    });
+
+    res.json({
+      success: true,
+      message: "Your claim has been submitted and images uploaded!",
       claim_id: newClaim.claim_id
     });
 

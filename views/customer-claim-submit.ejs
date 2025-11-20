@@ -126,6 +126,34 @@ for (const [id, message] of Object.entries(customMessages)) {
     }
 }
 
+claimForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (!claimForm.checkValidity()) {
+        claimForm.reportValidity();
+        return;
+    }
+
+    const formData = new FormData(claimForm); // IMPORTANT: keep actual files
+
+    try {
+        const response = await fetch("/submit-customer-claim", {
+            method: "POST",
+            body: formData // ⬅️ no headers, no JSON. Sends files correctly.
+        });
+
+        const result = await response.json();
+        popupMessage.textContent = result.message;
+        modal.style.display = "flex";
+
+    } catch (error) {
+        popupMessage.textContent = "An error occurred. Please try again.";
+        modal.style.display = "flex";
+    }
+});
+
+
+/*
 // ---- Handle Form Submission ----
 claimForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -181,7 +209,7 @@ function closeModal() {
 
 window.onclick = function(event) {
     if (event.target === modal) closeModal();
-};
+};*/
 </script>
 
 </body>
