@@ -96,6 +96,7 @@
 
     <!-- JavaScript for handling form submission and modal -->
     <script>
+        let submissionSuccess = false; // Track if submission was successful
         const claimForm = document.getElementById("claimForm");
         const modal = document.getElementById("popupModal");
         const popupMessage = document.getElementById("popupMessage");
@@ -122,6 +123,9 @@
                 // Show success message in modal
                 popupMessage.textContent = result.message;
                 modal.style.display = "flex"; // Show modal
+
+                // Track success → reload later if user closes modal
+submissionSuccess = result.success;
             } catch (err) {
                 // Show error message in modal
                 popupMessage.textContent = "An error occurred. Please try again.";
@@ -130,10 +134,15 @@
         });
         
          // Function to close modal
-        function closeModal() {
+            function closeModal() {
             modal.style.display = "none";
-            window.location.reload(); // Refresh the page after closing modal
+
+            if (submissionSuccess) {
+                // Only reload if the claim successfully saved + (email sent or failed gracefully)
+                window.location.reload();
+            }
         }
+
 
         // Allow close modal if user clicks outside the box
         window.onclick = function(event) {
