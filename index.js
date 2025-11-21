@@ -12,7 +12,7 @@ const { body, validationResult } = require("express-validator");
 const { Op } = require("sequelize");
 
 
-app.use("/images", express.static(path.join(__dirname, "images")));
+
 
 // Load env
 dotenv.config();
@@ -33,6 +33,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static("public"));
 
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 
 const randomImageName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
