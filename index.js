@@ -10,7 +10,7 @@ const session = require("express-session");
 const crypto = require("crypto");
 const { body, validationResult } = require("express-validator");
 const { Op } = require("sequelize");
-const path = require("path");
+
 
 app.use("/images", express.static(path.join(__dirname, "images")));
 
