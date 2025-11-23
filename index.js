@@ -17,12 +17,11 @@ const { Op } = require("sequelize");
 // Load env
 dotenv.config();
 
-// AWS S3 SDK (CommonJS style)
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+
 
 // Sequelize models (unchanged)
 const { sequelize, Claim, User, Customers, CustomerClaims } =
-  require("./models/config");
+  require("./config/db");
 
   // Express app
 const app = express();
@@ -36,41 +35,22 @@ app.use(express.static("public"));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 
-const randomImageName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
 
-// AWS S3 credentials from environment variables
-const bucketName = process.env.BUCKET_NAME
-const bucketRegion = process.env.BUCKET_REGION
-const accessKey = process.env.ACCESS_KEY
-const secretAccessKey = process.env.SECRET_ACCESS_KEY
+const {
+  s3,
+  PutObjectCommand,
+  bucketName,
+  bucketRegion,
+  randomImageName
+} = require("./config/s3");
 
-// Create S3 client
-const s3 = new S3Client({
-  credentials: {
-    accessKeyId: accessKey,
-    secretAccessKey: secretAccessKey
-  },
-  region: bucketRegion
-});
+
 
 // Multer setup for file uploads
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 // Multer for file uploads
 //const upload = multer({ dest: "uploads/" });
-
-
-
-// Nodemailer transporter (reuse your /submit-and-send-email config)
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
 
 
 
@@ -99,15 +79,6 @@ app.use(express.static(path.join(__dirname, "pages-css")));
 // view engine
 app.set("view engine", "ejs");
 
-/* ---------------------------
-   Helper middleware
-   --------------------------- */
-function checkLogin(req, res, next) {
-  if (!req.session || !req.session.userId) {
-    return res.redirect("/login");
-  }
-  next();
-}
 
 /* ---------------------------
    PUBLIC ROUTES (no login)
