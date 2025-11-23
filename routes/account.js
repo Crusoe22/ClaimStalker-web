@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User } = require("../db/db"); // import User model
+const { User } = require("../config/db"); // import User model
 const { checkLogin } = require("../middleware/auth"); // import auth middleware
 
 // Account page (protected)

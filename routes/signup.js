@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { body, validationResult } = require("express-validator");
 
-const { User } = require("../db/db"); // import your User model
+const { User } = require("../config/db"); // import your User model
 
 
 // Signup with validation

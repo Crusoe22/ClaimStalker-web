@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const nodemailer = require("nodemailer");
 
-const { Claim } = require("../db/db");  // import your Claim model
+const { Claim } = require("../config/db");  // import your Claim model
 
 
 router.post("/submit-and-send-email", async (req, res) => {

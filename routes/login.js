@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 
-const { User } = require("../db/db"); // import your User model
+const { User } = require("../config/db"); // import your User model
 
 // Login
 router.post("/login", async (req, res) => {

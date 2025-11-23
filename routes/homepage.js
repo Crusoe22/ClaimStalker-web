@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User } = require("../db/db"); // import your User model
+const { User } = require("../config/db"); // import your User model
 const { checkLogin } = require("../middleware/auth"); // import your auth middleware
 
 
