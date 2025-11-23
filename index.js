@@ -7,10 +7,12 @@ const dotenv = require("dotenv");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const session = require("express-session");
-const crypto = require("crypto");
+//const crypto = require("crypto");
 const { body, validationResult } = require("express-validator");
 const { Op } = require("sequelize");
 const checkLogin = require("./middleware/auth");
+const transporter = require("./config/mailer");
+
 
 
 
