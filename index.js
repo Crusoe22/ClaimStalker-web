@@ -121,15 +121,6 @@ app.get("/customer-claim-submit", (req, res) => {
   res.render("customer-claim-submit");
 });
 
-/*
-// Public form could POST directly to /submit-and-send-email from client JS.
-// (If you prefer to keep a dedicated public POST route, you can forward.)
-app.post("/customer-claim-submit-public", async (req, res, next) => {
-  // If you prefer forwarding, just call the same handler by continuing to /submit-and-send-email.
-  req.url = "/submit-and-send-email";
-  next();
-});
-*/
 
 // Login & Signup pages (render)
 app.get("/login", (req, res) => res.render("login", { error: null, old: {} }));
@@ -207,112 +198,6 @@ app.post("/login", async (req, res) => {
    ---------------------------
    This route is PUBLIC so emailed customers can POST here.
    It saves the claim (Sequelize Claim model) and sends confirmation email.
-*/
-/*
-// New route for customer-submitted-claims table
-app.post("/submit-customer-claim", upload.array('photo_urls', 12), async (req, res) => {
-  try {
-    const {
-      policyNumber,
-      firstname,
-      lastname,
-      email,
-      phone,
-      claimDate,
-      address_1,
-      address_2,
-      state,
-      zip_code,
-      description,
-      photo_urls
-    } = req.body;
-
-    const newClaim = await CustomerClaims.create({
-      policy_number: policyNumber,
-      first_name: firstname,
-      last_name: lastname,
-      email,
-      phone,
-      claim_date: claimDate,
-      address_1: address_1,
-      address_2: address_2,
-      state,
-      zip_code,
-      description,
-      photo_urls: photo_urls || [] // empty for now
-    });
-
-    res.json({
-      success: true,
-      message: "Your claim has been submitted successfully!",
-      claim_id: newClaim.claim_id
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Failed to submit claim." });
-  }
-});
-
-
-app.post("/submit-customer-claim", upload.array('photo_urls', 12), async (req, res) => {
-  try {
-    const {
-      policyNumber,
-      firstname,
-      lastname,
-      email,
-      phone,
-      claimDate,
-      address_1,
-      address_2,
-      state,
-      zip_code,
-      description
-    } = req.body;
-
-    // Extract file paths from req.files
-    const uploadedFiles = req.files ? req.files.map(file => file.path) : [];
-
-    const newClaim = await CustomerClaims.create({
-      policy_number: policyNumber,
-      first_name: firstname,
-      last_name: lastname,
-      email,
-      phone,
-      claim_date: claimDate,
-      address_1,
-      address_2,
-      state,
-      zip_code,
-      description,
-      photo_urls: uploadedFiles // <— store file paths or URLs
-    });
-
-    req.file.buffer
-
-    const params ={
-      Bucket: bucketName,
-      Key: req.file.originalname,
-      Body: req.file.buffer,
-      ContentType: req.file.mimetype
-    }
-
-    const command = new PutObjectCommand(params)
-    await s3.send(command);
-    
-
-    res.json({
-      success: true,
-      message: "Your claim has been submitted successfully!",
-      claim_id: newClaim.claim_id
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Failed to submit claim." });
-  }
-});
 */
 
 app.post("/submit-customer-claim", upload.array('photos', 12), async (req, res) => {
@@ -550,26 +435,6 @@ app.get("/export-claims", async (req, res) => {
   }
 });
 
-/*
-// Customers API (protected)
-app.get("/customers/search", async (req, res) => {
-  const { query } = req.query;
-  try {
-    const customer = await Customers.findOne({
-      where: {
-        [Op.or]: [
-          { customer_id: query },
-          { last_name: { [Op.iLike]: `%${query}%` } }
-        ]
-      }
-    });
-    if (!customer) return res.json({ success: false });
-    res.json({ success: true, customer });
-  } catch (err) {
-    res.json({ success: false, error: err.message });
-  }
-});
-*/
 
 // Search multiple customers (ID, last name, or email)
 app.get("/customers/search-multiple", async (req, res) => {
