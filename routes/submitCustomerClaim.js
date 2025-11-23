@@ -5,7 +5,7 @@ const path = require("path");
 
 // Import things used inside the route
 const { CustomerClaims } = require("../config/db");
-const { s3, PutObjectCommand, bucketName, bucketRegion } = require("../s3");  
+const { s3, PutObjectCommand, bucketName, bucketRegion } = require("../config/s3");  
 const upload = require("../middleware/upload");   // your multer config
 const randomImageName = require("../utils/randomImageName");
 
