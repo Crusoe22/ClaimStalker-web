@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const path = require("path");
+//const transporter = require("./config/mailer");
 
 // Import things used inside the route
 const { CustomerClaims } = require("../config/db");
