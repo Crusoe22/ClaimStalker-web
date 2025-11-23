@@ -10,7 +10,7 @@ const session = require("express-session");
 const crypto = require("crypto");
 const { body, validationResult } = require("express-validator");
 const { Op } = require("sequelize");
-
+const checkLogin = require("./middleware/auth");
 
 
 
@@ -315,6 +315,8 @@ app.post("/submit-and-send-email", async (req, res) => {
    PROTECTED ROUTES
    (Anything below here requires login)
    --------------------------- */
+
+
 app.use(checkLogin);
 
 // Internal (employee) claim form (protected)
