@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 //const nodemailer = require("nodemailer");
 const { Customers } = require("../config/db");
-const transporter = require("./config/mailer");
+const transporter = require("../config/mailer");
 
 // Endpoint to send email to all customers
 router.post('/send-customer-claim-submit', async (req, res) => {
