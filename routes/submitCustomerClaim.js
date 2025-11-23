@@ -6,8 +6,11 @@ const path = require("path");
 // Import things used inside the route
 const { CustomerClaims } = require("../config/db");
 const { s3, PutObjectCommand, bucketName, bucketRegion } = require("../config/s3");  
-const upload = require("../middleware/upload");   // your multer config
-const randomImageName = require("../utils/randomImageName");
+//const upload = require("../middleware/upload");   // your multer config
+const { upload, randomImageName } = require("../middleware/upload");
+
+
+//const randomImageName = require("../utils/randomImageName");
 
 router.post("/submit-customer-claim", upload.array('photos', 12), async (req, res) => {
   try {
