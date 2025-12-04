@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcryptjs");
+//const bcrypt = require("bcryptjs");
+const argon2 = require('argon2');
 const { body, validationResult } = require("express-validator");
 
 const { User } = require("../config/db"); // import your User model
@@ -33,7 +34,7 @@ router.post(
         name: req.body.name.trim(),
         email: req.body.email.trim(),
         phone: req.body.phone.trim(),
-        password: await bcrypt.hash(req.body.password, 10)
+        password: await argon2.hash(req.body.password, 10)
       };
 
       const existing = await User.findOne({ where: { username: data.username } });
