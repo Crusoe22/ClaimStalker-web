@@ -11,13 +11,12 @@ const { User } = require("../config/db"); // import your User model
 router.post(
   "/signup",
   [
-    body('username').trim().notEmpty().withMessage('Username is required.').isLength({ min: 3 }),
     body('name').trim().notEmpty().withMessage('Full name is required.'),
     body('email').trim().isEmail().withMessage('Please enter a valid email.').normalizeEmail(),
     body('phone').trim().matches(/^\(\d{3}\)\d{3}-\d{4}$/).withMessage('Phone must be in format (555)123-4567.'),
     body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters.')
-      .matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])/)
-      .withMessage('Password must contain uppercase, lowercase, number, and special character (@$!%*?&).'),
+      .matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%_*?&])/)
+      .withMessage('Password must contain uppercase, lowercase, number, and special character (@$!%_*?&).'),
     body('confirm_password').custom((value, { req }) => value === req.body.password).withMessage('Passwords do not match.')
   ],
   async (req, res) => {
@@ -30,15 +29,12 @@ router.post(
 
     try {
       const data = {
-        username: req.body.username.trim(),
         name: req.body.name.trim(),
         email: req.body.email.trim(),
         phone: req.body.phone.trim(),
         password: await bcrypt.hash(req.body.password, 10)
       };
 
-      const existing = await User.findOne({ where: { username: data.username } });
-      if (existing) return res.render('signup', { error: 'Username already taken. Please choose another.', old: req.body });
 
       await User.create(data);
       req.flash('success', 'Registration successful! Please log in.');
