@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcryptjs");
+//const bcrypt = require("bcryptjs");
+const argon2 = require("argon2");
+
 
 const { User } = require("../config/db");
 
@@ -26,7 +28,8 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const ok = await bcrypt.compare(password, user.password);
+    //const ok = await bcrypt.compare(password, user.password);
+    const ok = await argon2.verify(user.password, password);
     if (!ok) {
       return res.render("login", { 
         error: "Incorrect password.", 
