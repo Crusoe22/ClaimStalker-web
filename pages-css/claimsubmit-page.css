@@ -178,19 +178,19 @@ body {
 }
 
 input[type="reset"] {
-    background-color: #dc3545;
+    background-color: #888;
     color: white;
 }
 input[type="reset"]:hover {
-    background-color: #b52b37;
+    background-color: #88888856;
 }
 
 input[type="submit"] {
-    background-color: #1877f2;
+    background-color: #004c99;
     color: white;
 }
 input[type="submit"]:hover {
-    background-color: #125ac1;
+    background-color: rgba(18, 30, 193, 0.678);
 }
 
 /* Mobile adjustments */
