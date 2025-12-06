@@ -9,7 +9,7 @@ router.get("/view-claim", async (req, res) => {
   try {
     let where = {};
     if (policyNumber) where.policyNumber = policyNumber;
-    else if (searchType === 'policyNumber') where.policyNumber = searchValue;
+    else if (searchType === 'policyNumber') where.policyNumber = { [Op.iLike]: `%${searchValue}%` }; //else if (searchType === 'policyNumber') where.policyNumber = searchValue;
     else if (searchType === 'name') where.name = { [Op.iLike]: `%${searchValue}%` }; // search by "like" value
     else if (searchType === 'email') where.email = { [Op.iLike]: `%${searchValue}%` }; // search by "like" value
     else if (searchType === 'phone') where.phone = { [Op.iLike]: `%${searchValue}%` }; // search by "like" value 
