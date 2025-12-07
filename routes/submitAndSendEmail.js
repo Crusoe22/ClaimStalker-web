@@ -1,16 +1,46 @@
 const express = require("express");
 const router = express.Router();
 const nodemailer = require("nodemailer");
+const path = require("path");
+
 
 const { Claim } = require("../config/db");  // import your Claim model
+const { s3, PutObjectCommand, bucketName, bucketRegion } = require("../config/s3");  
+const { upload, randomImageName } = require("../middleware/upload");
 
 
-router.post("/submit-and-send-email", async (req, res) => {
+router.post("/submit-and-send-email", upload.array("photos", 12), async (req, res) => {
   try {
+
     // Accept either firstname+lastname or single 'name'
     let name = req.body.name;
     if (!name && req.body.firstname) {
       name = `${req.body.firstname || ""} ${req.body.lastname || ""}`.trim();
+    }
+
+
+    // --------------------
+    // HANDLE PHOTO UPLOADS
+    // --------------------
+    let uploadedImageURLs = [];
+
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const ext = path.extname(file.originalname);
+        const Key = `claims/${Date.now()}-${randomImageName()}${ext}`;
+
+        const uploadParams = {
+          Bucket: bucketName,
+          Key,
+          Body: file.buffer,
+          ContentType: file.mimetype
+        };
+
+        await s3.send(new PutObjectCommand(uploadParams));
+
+        const publicUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${Key}`;
+        uploadedImageURLs.push(publicUrl);
+      }
     }
 
     const claimData = {
@@ -23,8 +53,10 @@ router.post("/submit-and-send-email", async (req, res) => {
       autoLoss: req.body.autoLoss || false,
       propertyLoss: req.body.propertyLoss || false,
       location: req.body.location || null,
-      description: req.body.description || null
+      description: req.body.description || null,
+      photo_urls: uploadedImageURLs
     };
+
 
     const savedClaim = await Claim.create(claimData);
     console.log("Claim saved:", savedClaim.id || savedClaim);
