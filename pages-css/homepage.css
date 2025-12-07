@@ -2,7 +2,8 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(180deg, #eef4ff, #f7f9ff); /*background: url("/images/homepage-background.jpg") no-repeat center center fixed;*/
+    background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 50%, #f5f7ff 100%);
+    backdrop-filter: blur(10px); /* if you want a frosted glass look */ /*background: url("/images/homepage-background.jpg") no-repeat center center fixed;*/
     background-color: #f4f6fc;
     color: #333;
 }
