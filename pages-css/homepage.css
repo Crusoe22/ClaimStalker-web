@@ -2,7 +2,7 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: radial-gradient(circle at top left, #bec5cf 0%, #cacfd6 30%, #eaecf0 60%, #ffffff 100%); /* if you want a frosted glass look */ /*background: url("/images/homepage-background.jpg") no-repeat center center fixed;*/
+    background: linear-gradient(to bottom, #fafafa, #f0f2f5); /* if you want a frosted glass look */ /*background: url("/images/homepage-background.jpg") no-repeat center center fixed;*/
     background-attachment: fixed;
     /*background-color: #f4f6fc;*/
     color: #333;
