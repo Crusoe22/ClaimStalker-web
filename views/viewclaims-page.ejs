@@ -89,23 +89,28 @@
                     <!-- Photos column -->
                     <td>
                         <% if (claim.photo_urls && claim.photo_urls.length > 0) { %>
-                        <ul class="photo-list">
-                            <% claim.photo_urls.forEach(fullUrl => { 
-                                // Extract path after the bucket domain
-                                const fileKey = fullUrl.replace("https://claimstalker-customer-claim-submit.s3.us-east-1.amazonaws.com/", "");
-                            %>
-                            <li>
+                            <ul class="photo-list">
 
-                                <% let key = claim.photo_urls.replace(/^.*amazonaws\.com\//, ""); %>
-                                <a href="/download/<%= key %>">Download Photo</a>
+                                <% claim.photo_urls.forEach(fullUrl => { 
+                                    // Remove { } brackets
+                                    const cleaned = fullUrl.replace(/[{}]/g, "");
 
-                            </li>
-                            <% }) %>
-                        </ul>
+                                    // Extract only the S3 key: "claims/filename.jpg"
+                                    const key = cleaned.replace(/^.*amazonaws\.com\//, "");
+                                %>
+
+                                    <li>
+                                        <a href="/download/<%= key %>">Download Photo</a>
+                                    </li>
+
+                                <% }) %>
+
+                            </ul>
                         <% } else { %>
-                        <span>No Photos</span>
+                            <span>No Photos</span>
                         <% } %>
                     </td>
+
 
                     </tr>
                 <% }) %>
