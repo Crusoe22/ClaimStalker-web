@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
         autoLoss: DataTypes.STRING,
         propertyLoss: DataTypes.STRING,
         location: DataTypes.STRING,
-        description: DataTypes.STRING
+        description: DataTypes.STRING,
+        photo_urls: { type: DataTypes.ARRAY(DataTypes.STRING)}
     }, {
         tableName: "Claims"
     });
