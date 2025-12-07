@@ -268,3 +268,27 @@ body {
 .export-button:hover {
     background-color: #43a047;
 }
+
+/* Photo List Styling*/
+.photo-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.photo-list li {
+    margin: 4px 0;
+}
+
+.download-link {
+    background: #1e293b;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.download-link:hover {
+    background: #334155;
+}

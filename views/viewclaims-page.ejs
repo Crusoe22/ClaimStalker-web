@@ -69,6 +69,7 @@
                             <th>Auto Loss</th>
                             <th>Property Loss</th>
                             <th>Description</th>
+                            <th>Photos</th>
                         </tr>
                     </thead>
 
@@ -97,6 +98,22 @@
                 <p>No claims were found for your search. Please try again.</p>
             </div>
         <% } %>
+
+        <td>
+    <% if (claim.photo_urls && claim.photo_urls.length > 0) { %>
+        <ul class="photo-list">
+            <% claim.photo_urls.forEach(url => { %>
+                <li>
+                    <a href="<%= url %>" download class="download-link">
+                        Download
+                    </a>
+                </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <span>No Photos</span>
+    <% } %>
+</td>
     </main>
 </body>
 </html>
