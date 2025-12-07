@@ -76,13 +76,13 @@
                     <label for="description">Description</label>
                     <textarea id="description" name="description" rows="4" placeholder="Describe the claim..." required></textarea>
                 </div>
-            </div>
+            
 
-            <div class="form-group full-width">
-                <label for="photos">Upload Photos</label>
-                <input type="file" id="photos" name="photos" multiple accept="image/*">
+                <div class="form-group full-width">
+                    <label for="photos">Upload Photos</label>
+                    <input type="file" id="photos" name="photos" multiple accept="image/*">
+                </div>
             </div>
-        </div>
 
             <!-- Form buttons -->
             <div class="form-buttons">
@@ -119,8 +119,9 @@
                 // Send form data to backend
                 const response = await fetch("/submit-and-send-email", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data)
+                    body: formData   // send FormData, not JSON
+                    //headers: { "Content-Type": "application/json" },
+                    //body: JSON.stringify(data)
                 });
                 
                 // Parse server response
@@ -131,7 +132,7 @@
                 modal.style.display = "flex"; // Show modal
 
                 // Track success → reload later if user closes modal
-submissionSuccess = result.success;
+                submissionSuccess = result.success;
             } catch (err) {
                 // Show error message in modal
                 popupMessage.textContent = "An error occurred. Please try again.";
