@@ -23,8 +23,7 @@ const exportClaimsRoutes = require("./routes/exportClaims");
 const sendCustomerEmailsRoutes = require("./routes/sendCustomerEmails");
 const searchCustomersRoutes = require("./routes/searchCustomers");
 const saveCustomerRoutes = require("./routes/saveCustomer");
-
-
+const tempPhotoLink = require("./routes/tempPhotoLink");
 
 
 
@@ -190,7 +189,8 @@ app.use("/", saveCustomerRoutes);
 
 
 
-
+// Download photos (signed S3 link)
+app.use("/", tempPhotoLink);
 
 // Endpoint to send email to all customers
 app.use("/", sendCustomerEmailsRoutes);

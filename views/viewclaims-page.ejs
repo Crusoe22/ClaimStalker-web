@@ -90,10 +90,13 @@
                     <td>
                         <% if (claim.photo_urls && claim.photo_urls.length > 0) { %>
                         <ul class="photo-list">
-                            <% claim.photo_urls.forEach(url => { %>
+                            <% claim.photo_urls.forEach(fullUrl => { 
+                                // Extract path after the bucket domain
+                                const fileKey = fullUrl.replace("https://claimstalker-customer-claim-submit.s3.us-east-1.amazonaws.com/", "");
+                            %>
                             <li>
-                                <a href="<%- url %>" download class="download-link">
-                                Download
+                                <a href="/download/<%= fileKey %>" class="download-link">
+                                    Download
                                 </a>
                             </li>
                             <% }) %>
@@ -102,6 +105,7 @@
                         <span>No Photos</span>
                         <% } %>
                     </td>
+
                     </tr>
                 <% }) %>
                 </tbody>
