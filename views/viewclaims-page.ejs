@@ -95,9 +95,10 @@
                                 const fileKey = fullUrl.replace("https://claimstalker-customer-claim-submit.s3.us-east-1.amazonaws.com/", "");
                             %>
                             <li>
-                                <a href="/download/<%= fileKey %>" class="download-link">
-                                    Download
-                                </a>
+
+                                <% let key = claim.photo_urls.replace(/^.*amazonaws\.com\//, ""); %>
+                                <a href="/download/<%= key %>">Download Photo</a>
+
                             </li>
                             <% }) %>
                         </ul>
