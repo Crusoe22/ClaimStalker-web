@@ -73,47 +73,43 @@
                         </tr>
                     </thead>
 
-                    <tbody>
-                        <% claims.forEach(claim => { %>
-                            <tr>
-                                <td><%= claim.policyNumber %></td>
-                                <td><%= claim.name %></td>
-                                <td><%= claim.email %></td>
-                                <td><%= claim.phone %></td>
-                                <td><%= claim.insuranceCompany %></td>
-                                <td><%= claim.claimDate ? claim.claimDate.toDateString() : '' %></td>
-                                <td><%= claim.location %></td>
-                                <td><%= claim.autoLoss ? "Yes" : "No" %></td>
-                                <td><%= claim.propertyLoss ? "Yes" : "No" %></td>
-                                <td><%= claim.description %></td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
+                <tbody>
+                <% claims.forEach(claim => { %>
+                    <tr>
+                    <td><%= claim.policyNumber %></td>
+                    <td><%= claim.name %></td>
+                    <td><%= claim.email %></td>
+                    <td><%= claim.phone %></td>
+                    <td><%= claim.insuranceCompany %></td>
+                    <td><%= claim.claimDate ? claim.claimDate.toDateString() : '' %></td>
+                    <td><%= claim.location %></td>
+                    <td><%= claim.autoLoss ? "Yes" : "No" %></td>
+                    <td><%= claim.propertyLoss ? "Yes" : "No" %></td>
+                    <td><%= claim.description %></td>
+                    <!-- Photos column -->
+                    <td>
+                        <% if (claim.photo_urls && claim.photo_urls.length > 0) { %>
+                        <ul class="photo-list">
+                            <% claim.photo_urls.forEach(url => { %>
+                            <li>
+                                <a href="<%- url %>" download class="download-link">
+                                Download
+                                </a>
+                            </li>
+                            <% }) %>
+                        </ul>
+                        <% } else { %>
+                        <span>No Photos</span>
+                        <% } %>
+                    </td>
+                    </tr>
+                <% }) %>
+                </tbody>
                 </table>
             </div>
-
-        <% } else if (claims && claims.length === 0 && searchType) { %>
-            <div class="no-results-message">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>No claims were found for your search. Please try again.</p>
-            </div>
-        <% } %>
-
-        <td>
-    <% if (claim.photo_urls && claim.photo_urls.length > 0) { %>
-        <ul class="photo-list">
-            <% claim.photo_urls.forEach(url => { %>
-                <li>
-                    <a href="<%= url %>" download class="download-link">
-                        Download
-                    </a>
-                </li>
-            <% }) %>
-        </ul>
-    <% } else { %>
-        <span>No Photos</span>
-    <% } %>
-</td>
+        <% } else if (claims) { %>
+            <p class="no-results">No claims found matching your search criteria.</p>
+        <% } %> 
     </main>
 </body>
 </html>
