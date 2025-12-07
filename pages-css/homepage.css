@@ -2,13 +2,7 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: repeating-linear-gradient(
-    45deg,
-    #fafafa,
-    #fafafa 10px,
-    #f4f4f4 10px,
-    #f4f4f4 20px
-);
+    background: #f5f7fa;
  /* if you want a frosted glass look */ /*background: url("/images/homepage-background.jpg") no-repeat center center fixed;*/
     background-attachment: fixed;
     /*background-color: #f4f6fc;*/
