@@ -156,7 +156,7 @@ body {
 }
 
 /* No Results Message */
-.no-results-message {
+.no-results {
     text-align: center;
     padding: 30px;
     background-color: #fff;
@@ -167,7 +167,7 @@ body {
     color: #cc0000; /* A red color for alerts */
 }
 
-.no-results-message .fas {
+.no-results .fas {
     font-size: 2.5rem;
     margin-bottom: 15px;
 }
