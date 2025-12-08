@@ -93,10 +93,12 @@
 
                                 <% claim.photo_urls.forEach(fullUrl => { 
                                     // Remove { } brackets
-                                    const cleaned = fullUrl.replace(/[{}]/g, "");
+                                    //const cleaned = fullUrl.replace(/[{}]/g, "");
+                                    let cleaned = fullUrl.replace(/[{}]/g, "");
 
                                     // Extract only the S3 key: "claims/filename.jpg"
-                                    const key = cleaned.replace(/^.*amazonaws\.com\//, "");
+                                    //const key = cleaned.replace(/^.*amazonaws\.com\//, "");
+                                    let key = cleaned.replace(/^.*amazonaws\.com\//, "");
                                 %>
 
                                     <li>
