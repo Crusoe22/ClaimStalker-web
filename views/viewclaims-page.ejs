@@ -90,30 +90,22 @@
                     <td>
                         <% if (claim.photo_urls && claim.photo_urls.length > 0) { %>
                             <ul class="photo-list">
-
                                 <% claim.photo_urls.forEach(fullUrl => { 
-                                    // Remove { } brackets
-                                    //const cleaned = fullUrl.replace(/[{}]/g, "");
-                                    let cleaned = fullUrl.replace(/[{}]/g, "");
-
-                                    // Extract only the S3 key: "claims/filename.jpg"
-                                    //const key = cleaned.replace(/^.*amazonaws\.com\//, "");
-                                    // let key = cleaned.replace(/^.*amazonaws\.com\//, "");
+                                    let cleaned = fullUrl.replace(/[{}]/g, "").trim();
                                 %>
 
-                                    <li>
-                                        <a href="/download?url=<%= encodeURIComponent(cleaned) %>">Download Photo</a>
-                                    </li>
+                                <li>
+                                    <a href="/download?url=<%= encodeURIComponent(cleaned) %>">
+                                        Download Photo
+                                    </a>
+                                </li>
 
                                 <% }) %>
-
                             </ul>
                         <% } else { %>
                             <span>No Photos</span>
                         <% } %>
                     </td>
-
-
                     </tr>
                 <% }) %>
                 </tbody>
