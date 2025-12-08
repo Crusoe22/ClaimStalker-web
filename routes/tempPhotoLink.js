@@ -28,7 +28,7 @@ function extractKey(fullUrl) {
 
 //const s3 = new S3Client({ region: "us-east-1" });
 
-router.get("/download", async (req, res) => {
+router.get("/download/*", async (req, res) => {
   try {
     const fullUrl = req.query.url;  // from your frontend
     const fileKey = extractKey(fullUrl);
