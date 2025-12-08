@@ -15,7 +15,7 @@ router.get("/download/:fileKey", async (req, res) => {
       Key: fileKey,
     });
 
-    const url = await getSignedUrl(s3, command, { expiresIn: 60 });
+    const url = await getSignedUrl(s3, command, { expiresIn: 86400 });
     res.redirect(url);
 
   } catch (err) {
