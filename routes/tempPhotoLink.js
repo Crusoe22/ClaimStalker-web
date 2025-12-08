@@ -28,10 +28,33 @@ function extractKey(fullUrl) {
 
 //const s3 = new S3Client({ region: "us-east-1" });
 
+/*
 router.get("/download/*", async (req, res) => {
   try {
     const fullUrl = req.query.url;  // from your frontend
     const fileKey = extractKey(fullUrl);
+
+    const command = new GetObjectCommand({
+      Bucket: process.env.BUCKET_NAME,
+      Key: fileKey,
+    });
+
+    const signed = await getSignedUrl(s3, command, { expiresIn: 3600 });
+    res.redirect(signed);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error creating download link");
+  }
+});
+*/
+
+router.get("/download", async (req, res) => {
+  try {
+    const fullUrl = req.query.url;
+    const fileKey = extractKey(fullUrl);
+
+    if (!fileKey) return res.status(400).send("Invalid file URL");
 
     const command = new GetObjectCommand({
       Bucket: process.env.BUCKET_NAME,
