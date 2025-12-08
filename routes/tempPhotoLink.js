@@ -48,7 +48,7 @@ router.get("/download/*", async (req, res) => {
 });
 */
 
-router.get("/download", async (req, res) => {
+router.get("/download/*", async (req, res) => {
   try {
     const fullUrl = req.query.url;
     const fileKey = extractKey(fullUrl);
