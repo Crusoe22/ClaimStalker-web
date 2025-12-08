@@ -4,8 +4,8 @@ const router = express.Router();
 const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 // Initialize S3 Client (new code)
-const {S3Client, GetObjectCommand} = require("@aws-sdk/client-s3");
-const client = new S3Client{ClientParams};
+//const {S3Client, GetObjectCommand} = require("@aws-sdk/client-s3");
+//const client = new S3Client{ClientParams};
 
 
 
