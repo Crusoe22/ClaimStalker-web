@@ -18,13 +18,12 @@ const s3 = new S3Client({
 
 
 function extractKey(fullUrl) {
-  // remove { } if they exist
+  if (!fullUrl) return "";
   fullUrl = fullUrl.replace(/^\{|\}$/g, "");
-
-  // remove domain, bucket, region
   const parts = fullUrl.split(".amazonaws.com/");
-  return parts[1]; // <-- returns only the key
+  return parts[1] || "";
 }
+
 
 //const s3 = new S3Client({ region: "us-east-1" });
 
