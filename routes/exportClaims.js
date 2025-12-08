@@ -18,8 +18,8 @@ router.get("/export-claims", async (req, res) => {
     const workbook = new Excel.Workbook();
     const sheet = workbook.addWorksheet("Claims");
 
-    sheet.addRow(["Policy Number", "Name", "Email", "Phone", "Insurance Company", "Date of Loss", "Location", "Auto Loss", "Property Loss", "Description"]);
-    claims.forEach(c => sheet.addRow([c.policyNumber, c.name, c.email, c.phone, c.insuranceCompany, c.claimDate ? c.claimDate.toDateString() : "", c.location, c.autoLoss ? "Yes" : "No", c.propertyLoss ? "Yes" : "No", c.description]));
+    sheet.addRow(["Policy Number", "Name", "Email", "Phone", "Insurance Company", "Date of Loss", "Location", "Auto Loss", "Property Loss", "Description", "Photos"]);
+    claims.forEach(c => sheet.addRow([c.policyNumber, c.name, c.email, c.phone, c.insuranceCompany, c.claimDate ? c.claimDate.toDateString() : "", c.location, c.autoLoss ? "Yes" : "No", c.propertyLoss ? "Yes" : "No", c.description, c.photos]));
 
     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     res.setHeader("Content-Disposition", "attachment; filename=claims_export.xlsx");
