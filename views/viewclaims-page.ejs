@@ -102,7 +102,7 @@
                                 %>
 
                                     <li>
-                                        <a href="/download/<%= encodeURIComponent(key) %>">Download Photo</a>
+                                        <a href="/download?url=<%= encodeURIComponent(row.fileurl)  %>">Download Photo</a>
                                     </li>
 
                                 <% }) %>
