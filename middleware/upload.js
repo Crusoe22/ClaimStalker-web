@@ -35,7 +35,7 @@ module.exports = {
 const multer = require("multer");
 const crypto = require("crypto");
 const path = require("path");
-const { fileTypeFromBuffer } = require("file-type"); // fix import
+const { fileTypeFromBuffer } = require("file-type");
 
 // Memory storage
 const storage = multer.memoryStorage();
@@ -53,30 +53,27 @@ const upload = multer({
     fileSize: 10 * 1024 * 1024, // 10MB
     files: 12,
   },
-  fileFilter: async (req, file, cb) => {
-    try {
-      const ext = path.extname(file.originalname).toLowerCase();
+  fileFilter: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
 
-      // Check extension
-      if (!allowedExts.includes(ext)) {
-        return cb(new Error("Only image files are allowed"));
-      }
-
-      // Check MIME type
-      if (!allowedMimes.includes(file.mimetype)) {
-        return cb(new Error("Invalid MIME type"));
-      }
-
-      // Check actual file content
-      const type = await fileTypeFromBuffer(file.buffer);
-      if (!type || !allowedMimes.includes(type.mime)) {
-        return cb(new Error("File content does not match image type"));
-      }
-
-      cb(null, true);
-    } catch (err) {
-      cb(new Error("Error validating file: " + err.message));
+    if (!allowedExts.includes(ext)) {
+      return cb(new Error("Only image files are allowed"));
     }
+
+    if (!allowedMimes.includes(file.mimetype)) {
+      return cb(new Error("Invalid MIME type"));
+    }
+
+    // Async check for file content
+    fileTypeFromBuffer(file.buffer)
+      .then(type => {
+        if (!type || !allowedMimes.includes(type.mime)) {
+          cb(new Error("File content does not match image type"));
+        } else {
+          cb(null, true);
+        }
+      })
+      .catch(err => cb(new Error("Error validating file: " + err.message)));
   },
 });
 
