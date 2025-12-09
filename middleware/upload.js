@@ -35,7 +35,7 @@ module.exports = {
 const multer = require("multer");
 const crypto = require("crypto");
 const path = require("path");
-const { fileTypeFromBuffer } = require("file-type");
+const fileType = require("file-type"); // CommonJS
 
 // Memory storage
 const storage = multer.memoryStorage();
@@ -65,7 +65,7 @@ const upload = multer({
     }
 
     // Async check for file content
-    fileTypeFromBuffer(file.buffer)
+    fileType.fromBuffer(file.buffer)
       .then(type => {
         if (!type || !allowedMimes.includes(type.mime)) {
           cb(new Error("File content does not match image type"));
