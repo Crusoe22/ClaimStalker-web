@@ -32,51 +32,48 @@ module.exports = {
 };
 */
 
-// middleware/upload.js
 const multer = require("multer");
 const crypto = require("crypto");
 const path = require("path");
-const fileType = require("file-type"); // npm install file-type
+const { fileTypeFromBuffer } = require("file-type"); // fix import
 
-// Memory storage for Multer (we will upload to S3 directly)
+// Memory storage
 const storage = multer.memoryStorage();
 
-// Generate a random filename
+// Random filename generator
 const randomImageName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex");
 
-// Allowed extensions & MIME types
+// Allowed types
 const allowedExts = [".jpg", ".jpeg", ".png", ".gif"];
 const allowedMimes = ["image/jpeg", "image/png", "image/gif"];
 
-// Multer upload instance
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB max
-    files: 12, // maximum 12 files
+    fileSize: 10 * 1024 * 1024, // 10MB
+    files: 12,
   },
   fileFilter: async (req, file, cb) => {
     try {
       const ext = path.extname(file.originalname).toLowerCase();
 
-      // 1️⃣ Check file extension
+      // Check extension
       if (!allowedExts.includes(ext)) {
-        return cb(new Error("Only image files are allowed (jpg, jpeg, png, gif)"));
+        return cb(new Error("Only image files are allowed"));
       }
 
-      // 2️⃣ Check MIME type from multer
+      // Check MIME type
       if (!allowedMimes.includes(file.mimetype)) {
-        return cb(new Error("File type mismatch — not a valid image"));
+        return cb(new Error("Invalid MIME type"));
       }
 
-      // 3️⃣ Optional: verify actual file content
-      // file.buffer contains the file in memory
-      const type = await fileType.fromBuffer(file.buffer);
+      // Check actual file content
+      const type = await fileTypeFromBuffer(file.buffer);
       if (!type || !allowedMimes.includes(type.mime)) {
-        return cb(new Error("Invalid image content detected"));
+        return cb(new Error("File content does not match image type"));
       }
 
-      cb(null, true); // file is valid
+      cb(null, true);
     } catch (err) {
       cb(new Error("Error validating file: " + err.message));
     }
