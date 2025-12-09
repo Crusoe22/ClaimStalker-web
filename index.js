@@ -4,7 +4,6 @@ const express = require("express");
 const path = require("path");
 const multer = require("multer");
 const dotenv = require("dotenv");
-const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const session = require("express-session");
 //const crypto = require("crypto");
@@ -24,10 +23,6 @@ const sendCustomerEmailsRoutes = require("./routes/sendCustomerEmails");
 const searchCustomersRoutes = require("./routes/searchCustomers");
 const saveCustomerRoutes = require("./routes/saveCustomer");
 const tempPhotoLink = require("./routes/tempPhotoLink");
-
-
-
-
 
 
 
@@ -134,7 +129,7 @@ app.use("/", loginRoute);
 
 app.use("/", submitCustomerClaimRoute);
 
-app.use("/", submitAndSendEmailRoute);
+
 
 
 /* ---------------------------
@@ -145,10 +140,13 @@ app.use("/", submitAndSendEmailRoute);
 
 app.use(checkLogin);
 
+// Claim submission with email (protected)
+app.use("/", submitAndSendEmailRoute);
+
 // Internal (employee) claim form (protected)
-app.get("/customer-claim-submit", (req, res) => {
+/* app.get("/customer-claim-submit", (req, res) => {
   res.render("customer-claim-submit");
-});
+}); */
 
 app.get('/send-customer-claim-submit', (req, res) => {
     res.render('send-customer-claim-submit');

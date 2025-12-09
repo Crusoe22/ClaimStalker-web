@@ -33,7 +33,8 @@ router.post("/submit-and-send-email", upload.array("photos", 12), async (req, re
           Bucket: bucketName,
           Key,
           Body: file.buffer,
-          ContentType: file.mimetype
+          ContentType: file.mimetype,
+          ACL: "private" //added privacy confimation 
         };
 
         await s3.send(new PutObjectCommand(uploadParams));
