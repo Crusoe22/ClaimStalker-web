@@ -10,8 +10,7 @@ function checkLogin(req, res, next) {
 }
 
 module.exports = checkLogin;*/
-
-const { User } = require("../config/db");
+const { User } = require("../config/db"); // adjust path if needed
 
 async function checkLogin(req, res, next) {
   if (!req.session || !req.session.userId) {
@@ -19,7 +18,7 @@ async function checkLogin(req, res, next) {
   }
 
   try {
-    // Load user from DB
+    // Fetch the user from DB
     const user = await User.findByPk(req.session.userId);
 
     if (!user) {
@@ -27,9 +26,10 @@ async function checkLogin(req, res, next) {
       return res.redirect("/login");
     }
 
-    // Attach user object for downstream middleware
+    // Attach user info for downstream middleware
     req.user = {
       id: user.id,
+      name: user.name,
       email: user.email,
       role: user.role
     };
