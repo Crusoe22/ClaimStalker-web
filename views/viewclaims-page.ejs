@@ -95,10 +95,13 @@
                                 %>
 
                                 <li>
-                                    <a href="/download?url=<%= encodeURIComponent(cleaned) %>"
+                                    <!--<a href="/download?url=<%= encodeURIComponent(cleaned) %>"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                    >
+                                    > -->
+                                    <a href="/download/<%= claim.id %>"
+                                        target="_blank"
+                                        rel="noopener noreferrer">
                                         Photo
                                     </a>
                                 </li>

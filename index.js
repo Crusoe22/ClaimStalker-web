@@ -23,7 +23,7 @@ const sendCustomerEmailsRoutes = require("./routes/sendCustomerEmails");
 const searchCustomersRoutes = require("./routes/searchCustomers");
 const saveCustomerRoutes = require("./routes/saveCustomer");
 const tempPhotoLink = require("./routes/tempPhotoLink");
-
+const requireRole = require("./middleware/requireRole");
 
 
 
@@ -152,7 +152,7 @@ app.get('/send-customer-claim-submit', (req, res) => {
     res.render('send-customer-claim-submit');
 });
 
-app.get('/claimsubmit-page', (req, res) => {
+app.get('/claimsubmit-page', requireRole("admin"), (req, res) => {
     res.render('claimsubmit-page');
 });
 
@@ -164,8 +164,8 @@ app.use("/", accountRoute);
 
 
 // Customer manager & admin pages
-app.get("/customer-manager", (req, res) => res.render("customer-manager"));
-app.get("/email-page", (req, res) => res.render("index"));
+app.get("/customer-manager", requireRole("admin"), (req, res) => res.render("customer-manager"));
+app.get("/email-page", requireRole("admin"), (req, res) => res.render("index"));
 
 // View claims UI
 app.get("/viewclaims-page", (req, res) => res.render("viewclaims-page", { claims: [], searchType: null, searchValue: null }));
@@ -176,7 +176,7 @@ app.use("/", viewClaimsRoutes);
 
 
 // Export claims to Excel (protected)
-app.use("/", exportClaimsRoutes);
+app.use("/", requireRole("admin"), exportClaimsRoutes);
 
 
 // Search multiple customers (ID, last name, or email)
@@ -191,7 +191,7 @@ app.use("/", saveCustomerRoutes);
 app.use("/", tempPhotoLink);
 
 // Endpoint to send email to all customers
-app.use("/", sendCustomerEmailsRoutes);
+app.use("/", requireRole("admin"), sendCustomerEmailsRoutes);
 
 
 // Serve EJS page
