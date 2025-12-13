@@ -152,7 +152,7 @@ app.get('/send-customer-claim-submit', (req, res) => {
     res.render('send-customer-claim-submit');
 });
 
-app.get('/claimsubmit-page', requireRole(["employee", "admin"]), (req, res) => {
+app.get('/claimsubmit-page', requireRole(["employee", "admin", "user"]), (req, res) => {
     res.render('claimsubmit-page');
 });
 
